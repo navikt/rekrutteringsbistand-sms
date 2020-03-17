@@ -7,6 +7,8 @@ import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.service.Service;
 import org.apache.cxf.service.model.OperationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.MessageContext;
@@ -15,6 +17,9 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import java.util.Set;
 
 public class LogErrorHandler implements SOAPHandler<SOAPMessageContext> {
+
+    private static Logger log = LoggerFactory.getLogger(LogErrorHandler.class);
+
     @Override
     public Set<QName> getHeaders() {
         return null;
@@ -36,8 +41,7 @@ public class LogErrorHandler implements SOAPHandler<SOAPMessageContext> {
                 exception = exception.getCause();
             }
 
-            // TODO log
-//            log.error(beskrivelse(message).toString(), exception);
+            log.error(beskrivelse(message).toString(), exception);
         }
         return true;
     }

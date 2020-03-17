@@ -5,6 +5,8 @@ import no.altinn.schemas.services.serviceengine.notification._2009._10.*;
 import no.altinn.schemas.services.serviceengine.standalonenotificationbe._2009._10.StandaloneNotificationBEList;
 import no.altinn.services.serviceengine.notification._2010._10.INotificationAgencyExternalBasic;
 import no.altinn.services.serviceengine.notification._2010._10.INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.JAXBElement;
@@ -12,6 +14,9 @@ import javax.xml.namespace.QName;
 
 @Service
 public class AltinnVarselAdapter {
+
+    private static Logger log = LoggerFactory.getLogger(AltinnVarselAdapter.class);
+
     private static final String NAMESPACE = "http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10";
 
     private final INotificationAgencyExternalBasic iNotificationAgencyExternalBasic;
@@ -56,9 +61,7 @@ public class AltinnVarselAdapter {
                     varselProperties.getSystemPassord(),
                     standaloneNotification);
         } catch (INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage | RuntimeException e) {
-            // TODO: Fiks
-//            log.error("Feil ved varsling gjennom Altinn", e);
-//            throw new AltinnException("Feil ved varsling gjennom Altinn");
+            log.error("Feil ved varsling gjennom Altinn", e);
             throw new RuntimeException("Feil ved varsling gjennom Altinn");
         }
     }
