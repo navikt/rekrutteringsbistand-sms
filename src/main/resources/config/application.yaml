@@ -1,0 +1,14 @@
+server:
+  port: 8080
+  servlet.context-path: /rekrutteringsbistand-sms
+
+management.endpoints.web:
+  exposure.include: info, health, metrics, prometheus
+  base-path: /actuator
+
+spring:
+  application:
+    name: rekrutteringsbistand-sms
+  profiles.active: dev
+  jmx:
+    enabled: false
