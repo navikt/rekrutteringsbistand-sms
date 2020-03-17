@@ -1,0 +1,27 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: rekrutteringsbistand-sms
+  namespace: default
+  labels:
+    team: arbeidsgiver
+spec:
+  image: {{image}}
+  port: 8080
+  ingresses:
+    - https://arbeidsgiver.nais.adeo.no/rekrutteringsbistand-sms/
+  liveness:
+    path: /rekrutteringsbistand-sms/internal/actuator/health
+    initialDelay: 20
+  readiness:
+    path: /rekrutteringsbistand-sms/internal/actuator/health
+    initialDelay: 20
+  vault:
+    enabled: true
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: prod
+  webproxy: true
+  prometheus:
+    enabled: true
+    path: /rekrutteringsbistand-sms/internal/actuator/prometheus
