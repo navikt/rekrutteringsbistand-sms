@@ -52,6 +52,7 @@ jobs:
         run: |
           docker build --tag ${IMAGE} .
           echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} --password-stdin
+          echo ${IMAGE}
           docker push ${IMAGE}
       - uses: nais/deploy/actions/deploy@v1
         env:
