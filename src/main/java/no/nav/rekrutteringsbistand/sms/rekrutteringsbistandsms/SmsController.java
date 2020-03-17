@@ -19,7 +19,6 @@ public class SmsController {
     @GetMapping("/sms")
     public String test() {
         log.info("Sender sms til via Altinn");
-
         // altinnVarselAdapter.sendVarsel("", "");
         return "test";
     }
