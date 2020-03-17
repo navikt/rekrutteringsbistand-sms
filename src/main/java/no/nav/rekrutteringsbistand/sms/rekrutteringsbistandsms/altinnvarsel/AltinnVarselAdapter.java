@@ -37,16 +37,15 @@ public class AltinnVarselAdapter {
         return new JAXBElement<>(new QName(NAMESPACE, localpart), Boolean.class, value);
     }
 
-    public void sendVarsel(String avgiver, String telefonnummer, String varseltekst) {
+    public void sendVarsel(String fnr, String varseltekst) {
         StandaloneNotificationBEList standaloneNotification = new StandaloneNotificationBEList().withStandaloneNotification(new StandaloneNotification()
                 .withIsReservable(ns("IsReservable", false))
                 .withLanguageID(1044)
                 .withNotificationType(ns("NotificationType", "VarselDPVUtenRevarsel"))
                 .withReceiverEndPoints(ns("ReceiverEndPoints", ReceiverEndPointBEList.class, new ReceiverEndPointBEList()
                         .withReceiverEndPoint(new ReceiverEndPoint()
-                                .withTransportType(ns("TransportType", TransportType.class, TransportType.SMS))
-                                .withReceiverAddress(ns("ReceiverAddress", telefonnummer)))))
-                .withReporteeNumber(ns("ReporteeNumber", avgiver))
+                                .withTransportType(ns("TransportType", TransportType.class, TransportType.SMS)))))
+                .withReporteeNumber(ns("ReporteeNumber", fnr))
                 .withTextTokens(ns("TextTokens", TextTokenSubstitutionBEList.class, new TextTokenSubstitutionBEList()
                         .withTextToken(new TextToken()
                                 .withTokenValue(ns("TokenValue", varseltekst)))))
