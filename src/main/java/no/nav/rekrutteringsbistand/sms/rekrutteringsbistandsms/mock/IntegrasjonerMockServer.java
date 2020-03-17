@@ -1,4 +1,4 @@
-package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms;
+package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.mock;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;

@@ -1,4 +1,4 @@
-package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms;
+package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
