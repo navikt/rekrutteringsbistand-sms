@@ -41,8 +41,8 @@ class SmsRepository(
         )
     }
 
-    fun hentSms(id: Number): Sms {
-        return jdbcTemplate.query("SELECT * FROM sms LIMIT 1", SmsMapper())[0]
+    fun hentSms(id: Number): Sms? {
+        return jdbcTemplate.queryForObject("SELECT * FROM sms WHERE id = ? LIMIT 1", arrayOf<Any>(id), SmsMapper())
     }
 
 }
