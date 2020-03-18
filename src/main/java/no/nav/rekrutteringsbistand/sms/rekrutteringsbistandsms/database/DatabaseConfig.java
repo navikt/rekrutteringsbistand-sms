@@ -19,7 +19,7 @@ public class DatabaseConfig {
 
     private static final String DATABASE_NAVN = "rekrutteringsbistand-sms";
 
-    @Value("${database.url}")
+    @Value("${rekrutteringsbistand.database.url}")
     private String databaseUrl;
 
     @Value("${rekrutteringsbistand.database.vault-sti}")
