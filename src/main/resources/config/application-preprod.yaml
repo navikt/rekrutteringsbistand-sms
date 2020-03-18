@@ -12,12 +12,8 @@ no.nav.security.jwt:
 
 rekrutteringsbistand:
   database:
-    database-navn: rekrutteringsbistand-sms
-    database-url: ${spring.datasource.url}
+    url: jdbc:postgresql://b27dbvl013.preprod.local:5432/rekrutteringsbistand-sms
     vault-sti: postgresql/preprod-fss
-    minimum-idle: 1
-    maximum-pool-size: 2
-    max-lifetime: 300000
   altinn-varsel:
     uri: https://pep-gw-q1.oera-q.local:9443/ekstern/altinn/notificationagencyexternalbasic/v1
   sts:
