@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Repository
 class SmsRepository(
@@ -12,7 +11,7 @@ class SmsRepository(
         simpleJdbcInsert: SimpleJdbcInsert
 ) {
 
-     companion object {
+    companion object {
         const val TABELL = "sms"
         const val ID = "id"
         const val OPPRETTET = "opprettet"
@@ -31,7 +30,7 @@ class SmsRepository(
     fun lagreSms(sms: OpprettSms): Number {
         return smsInsert.executeAndReturnKey(
                 mapOf(
-                        OPPRETTET to LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                        OPPRETTET to LocalDateTime.now(),
                         SENDT to null,
                         MELDING to sms.melding,
                         FNR to sms.fnr,
@@ -40,7 +39,6 @@ class SmsRepository(
                         STATUS to Status.IKKE_SENDT.toString()
                 )
         )
-
     }
 
     fun hentSms(id: Number): Sms {
