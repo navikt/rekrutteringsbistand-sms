@@ -20,7 +20,7 @@ spec:
     enabled: true
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: preprod
+      value: dev
   webproxy: true
   prometheus:
     enabled: true
