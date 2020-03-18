@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 import javax.sql.DataSource;
 
 @Configuration
-@Profile({"dev", "prod"})
+@Profile({"preprod", "prod"})
 public class DatabaseConfig {
 
     private static final String DATABASE_NAVN = "rekrutteringsbistand-sms";
