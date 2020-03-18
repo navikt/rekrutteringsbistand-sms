@@ -19,17 +19,6 @@ class SmsController(
     @GetMapping("/sms")
     fun test(): String {
         log.info("Lagrer i database")
-        // TODO: Lagre i database
-        val sms = OpprettSms(
-                melding = "test",
-                fnr = "blabla",
-                kandidatlisteId = "bla",
-                navident = "yey"
-        )
-        val id = smsRepository.lagreSms(sms)
-
-        smsRepository.hentSms(id)
-
         return "test"
     }
 }
