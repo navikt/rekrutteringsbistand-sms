@@ -9,7 +9,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@Profile("dev")
+@Profile("lokal")
 @Component
 public class IntegrasjonerMockServer implements InitializingBean, DisposableBean {
 

@@ -11,6 +11,6 @@ management:
 spring:
   application:
     name: rekrutteringsbistand-sms
-  profiles.active: dev
+  profiles.active: lokal
   jmx:
     enabled: false
