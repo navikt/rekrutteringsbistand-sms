@@ -18,6 +18,11 @@ spec:
     initialDelay: 20
   vault:
     enabled: true
+    paths:
+      - kvPath: /serviceuser/data/prod/srv-rekbis-sms
+        mountPath: /secret/serviceuser
+      - kvPath: /kv/prod/fss/rekrutteringsbistand-sms/default
+        mountPath: /var/run/secrets/nais.io/vault
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: prod
