@@ -14,10 +14,14 @@ class SmsController(
         private val smsRepository: SmsRepository
 ) {
 
+    companion object {
+        private const val MAKS_LENGDE = 160
+    }
+
     @PostMapping("/sms")
     fun sendSms(@RequestBody sms: OpprettSms): ResponseEntity<String> {
         val fnrOk = sms.fnr.all { isValid(it) }
-        val lengdeOk = sms.melding.length <= 160
+        val lengdeOk = sms.melding.length <= MAKS_LENGDE
 
         return if (fnrOk && lengdeOk) {
             smsRepository.lagreSms(sms)
@@ -31,7 +35,7 @@ class SmsController(
         } else {
             ResponseEntity
                     .badRequest()
-                    .body("Meldingen kan ikke være lengre enn 160 tegn")
+                    .body("Meldingen kan ikke være lengre enn $MAKS_LENGDE tegn")
         }
     }
 }
