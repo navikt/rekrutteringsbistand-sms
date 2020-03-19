@@ -13,6 +13,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.TestRestTemplate.HttpClientOption.ENABLE_COOKIES
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpStatus
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
@@ -32,12 +33,13 @@ class OpprettSmsTest {
 
     @BeforeEach
     fun login() {
-        restTemplate.getForObject("$baseUrl/local/cookie", String::class.java)
+        restTemplate.getForObject("$baseUrl/local/login", String::class.java)
     }
 
     @Test
     fun `POST til sms skal lagre i database`() {
-        restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
+        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
 
         enSmsTilOppretting.fnr.forEachIndexed { index, fnr ->
             val sms: Sms = repository.hentSms(index + 1)!!
@@ -46,7 +48,7 @@ class OpprettSmsTest {
             assertThat(sms.melding).isEqualTo(enSmsTilOppretting.melding)
             assertThat(sms.fnr).isEqualTo(fnr)
             assertThat(sms.kandidatlisteId).isEqualTo(enSmsTilOppretting.kandidatlisteId)
-            assertThat(sms.navident).isEqualTo(enSmsTilOppretting.navident)
+            assertThat(sms.navident).isEqualTo("X123456")
             assertThat(sms.status).isEqualTo(Status.IKKE_SENDT)
         }
     }

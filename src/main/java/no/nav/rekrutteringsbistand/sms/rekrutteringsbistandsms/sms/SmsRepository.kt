@@ -11,7 +11,8 @@ import java.time.LocalDateTime
 @Repository
 class SmsRepository(
         val jdbcTemplate: JdbcTemplate,
-        simpleJdbcInsert: SimpleJdbcInsert
+        simpleJdbcInsert: SimpleJdbcInsert,
+        val authUtils: AuthUtils
 ) {
 
 
@@ -42,7 +43,7 @@ class SmsRepository(
                             MELDING to sms.melding,
                             FNR to it,
                             KANDIDATLISTE_ID to sms.kandidatlisteId,
-                            NAVIDENT to sms.navident,
+                            NAVIDENT to authUtils.hentNavident(),
                             STATUS to Status.IKKE_SENDT.toString()
                     )
             )

@@ -4,7 +4,6 @@ import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.OpprettSms
 
 val enSmsTilOppretting = OpprettSms(
         melding = "Vi trenger deg!",
-        fnr = listOf("123", "456", "789"),
-        kandidatlisteId = "123456",
-        navident = "X123456"
+        fnr = listOf("02080569664", "03012341295", "31129611815"),
+        kandidatlisteId = "123456"
 )

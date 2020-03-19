@@ -16,8 +16,7 @@ data class Sms (
 data class OpprettSms (
         val melding: String,
         val fnr: List<String>,
-        val kandidatlisteId: String,
-        val navident: String
+        val kandidatlisteId: String
 )
 
 enum class Status {
