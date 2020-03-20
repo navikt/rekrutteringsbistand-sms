@@ -5,6 +5,7 @@ import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel.Alti
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.scheduler.ConcurrencyConfig
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime.now
 import java.util.HashMap
 import java.util.concurrent.CompletableFuture
 import java.util.function.Supplier
@@ -18,6 +19,9 @@ class SendSmsService(
 
     fun sendSmserAsync() {
         val usendteSmser = smsRepository.hentUsendteSmser()
+                .filter { it.gjenværendeForsøk > 0 }
+                .filter { it.sistFeilet?.plusMinutes(30)?.isAfter(now()) ?: true }
+
         log.info("Fant ${usendteSmser.size} usendte SMSer")
 
         val allFutures = HashMap<String, CompletableFuture<String>>()
@@ -36,9 +40,16 @@ class SendSmsService(
             altinnVarselAdapter.sendVarsel(sms.fnr, sms.melding)
             log.info("Sendte SMS, id: ${sms.id}")
             smsRepository.settSendt(sms.id)
+
         } catch (exception: AltinnException) {
-            log.warn("Kunne ikke sende SMS, id: ${sms.id}")
-            smsRepository.settStatus(sms.id, Status.FEIL)
+            val gjenværendeForsøk = if (sms.gjenværendeForsøk > 0) sms.gjenværendeForsøk - 1 else 0
+            log.warn("Kunne ikke sende SMS, id: ${sms.id}, gjenværende forøk: $gjenværendeForsøk")
+            smsRepository.settFeil(
+                    id = sms.id,
+                    status = Status.FEIL,
+                    gjenværendeForsøk = gjenværendeForsøk,
+                    tidspunkt = now()
+            )
         }
         return sms.id
     }

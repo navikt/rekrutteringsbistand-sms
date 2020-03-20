@@ -24,6 +24,8 @@ class SmsRepository(
         const val KANDIDATLISTE_ID = "kandidatliste_id"
         const val NAVIDENT = "navident"
         const val STATUS = "status"
+        const val GJENVÆRENDE_FORSØK = "gjenvarende_forsok"
+        const val SIST_FEILET = "sist_feilet"
     }
 
     private val smsInsert = simpleJdbcInsert
@@ -40,16 +42,16 @@ class SmsRepository(
                     FNR to it,
                     KANDIDATLISTE_ID to sms.kandidatlisteId,
                     NAVIDENT to authUtils.hentNavident(),
-                    STATUS to Status.IKKE_SENDT.toString()
+                    STATUS to Status.IKKE_SENDT.toString(),
+                    GJENVÆRENDE_FORSØK to 10
             )
         }
         val oppdaterteRader: IntArray = smsInsert.executeBatch(*smsRaderTilLagring.toTypedArray())
         log.info("Lagret ${oppdaterteRader.sum()} SMSer i database")
     }
 
-    // TODO: Skal man kun sende de som er IKKE_SENDT? Hva med de som feiler?
     fun hentUsendteSmser(): List<Sms> {
-        return jdbcTemplate.query("SELECT * FROM sms WHERE status = 'IKKE_SENDT'", SmsMapper())
+        return jdbcTemplate.query("SELECT * FROM sms WHERE status = 'IKKE_SENDT' OR status = 'FEIL'", SmsMapper())
     }
 
     fun settSendt(id: String) {
@@ -60,7 +62,14 @@ class SmsRepository(
         jdbcTemplate.update("UPDATE sms SET status = ? WHERE id = ?", status.name, id)
     }
 
-    fun hentSms(id: Number): Sms? {
+    fun settFeil(id: String, status: Status, gjenværendeForsøk: Int, tidspunkt: LocalDateTime) {
+        jdbcTemplate.update(
+                "UPDATE sms SET status = ?, gjenvarende_forsok = ?, tidspunkt = ? WHERE id = ?",
+                status.name, gjenværendeForsøk, tidspunkt, id
+        )
+    }
+
+    fun hentSms(id: Int): Sms? {
         return jdbcTemplate.queryForObject("SELECT * FROM sms WHERE id = ? LIMIT 1", arrayOf<Any>(id), SmsMapper())
     }
 }

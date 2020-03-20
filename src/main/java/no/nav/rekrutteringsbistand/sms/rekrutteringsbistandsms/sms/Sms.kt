@@ -10,7 +10,9 @@ data class Sms (
         val fnr: String,
         val kandidatlisteId: String,
         val navident: String,
-        val status: Status
+        val status: Status,
+        val gjenværendeForsøk: Int,
+        val sistFeilet: LocalDateTime?
 )
 
 data class OpprettSms (
