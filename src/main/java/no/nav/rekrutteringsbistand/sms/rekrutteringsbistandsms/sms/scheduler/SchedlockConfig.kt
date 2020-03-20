@@ -11,8 +11,7 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableScheduling
-// TODO finn rett default
-@EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
+@EnableSchedulerLock(defaultLockAtMostFor = "PT59S")
 class SchedlockConfig {
 
     @Bean

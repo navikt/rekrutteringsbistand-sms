@@ -15,7 +15,6 @@ class SendSmsScheduler(private val sendSmsService: SendSmsService) {
     }
 
     @Scheduled(cron = HVERT_MINUTT)
-    // TODO lock at most, lock at least
     @SchedulerLock(name = "sendSmsScheduler")
     fun schedulertJobb() {
         LockAssert.assertLocked()
