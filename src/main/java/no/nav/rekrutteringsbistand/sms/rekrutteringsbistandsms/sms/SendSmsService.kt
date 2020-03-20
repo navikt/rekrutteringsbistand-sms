@@ -17,10 +17,15 @@ class SendSmsService(
         private val concurrencyConfig: ConcurrencyConfig
 ) {
 
+    companion object {
+        const val MAKS_ANTALL_FORSØK = 10
+        const val PRØV_IGJEN_ETTER_MINUTTER = 15L
+    }
+
     fun sendSmserAsync() {
         val usendteSmser = smsRepository.hentUsendteSmser()
                 .filter { it.gjenværendeForsøk > 0 }
-                .filter { it.sistFeilet?.plusMinutes(30)?.isAfter(now()) ?: true }
+                .filter { it.sistFeilet?.plusMinutes(PRØV_IGJEN_ETTER_MINUTTER)?.isAfter(now()) ?: true }
 
         log.info("Fant ${usendteSmser.size} usendte SMSer")
 

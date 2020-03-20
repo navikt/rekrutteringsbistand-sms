@@ -43,7 +43,7 @@ class SmsRepository(
                     KANDIDATLISTE_ID to sms.kandidatlisteId,
                     NAVIDENT to authUtils.hentNavident(),
                     STATUS to Status.IKKE_SENDT.toString(),
-                    GJENVÆRENDE_FORSØK to 10
+                    GJENVÆRENDE_FORSØK to SendSmsService.MAKS_ANTALL_FORSØK
             )
         }
         val oppdaterteRader: IntArray = smsInsert.executeBatch(*smsRaderTilLagring.toTypedArray())
