@@ -20,5 +20,5 @@ data class OpprettSms (
 )
 
 enum class Status {
-    SENDT, IKKE_SENDT, FEIL
+    SENDT, UNDER_UTSENDING, IKKE_SENDT, FEIL
 }

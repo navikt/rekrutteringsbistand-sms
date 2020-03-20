@@ -1,6 +1,8 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 
 import no.bekk.bekkopen.person.FodselsnummerValidator.isValid
+import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.scheduler.SendSmsScheduler
+import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.scheduler.SendSmsService
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -11,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 @Protected
 @RestController
 class SmsController(
-        private val smsRepository: SmsRepository
+        private val smsRepository: SmsRepository,
+        private val sendSmsService: SendSmsService
 ) {
 
     companion object {
@@ -25,6 +28,7 @@ class SmsController(
 
         return if (fnrOk && lengdeOk) {
             smsRepository.lagreSms(sms)
+            sendSmsService.sendSmserAsync()
             ResponseEntity
                     .status(HttpStatus.CREATED)
                     .build()

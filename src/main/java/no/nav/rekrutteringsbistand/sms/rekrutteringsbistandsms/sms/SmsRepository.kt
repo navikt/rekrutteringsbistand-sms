@@ -47,12 +47,17 @@ class SmsRepository(
         log.info("Lagret ${oppdaterteRader.sum()} SMSer i database")
     }
 
+    // TODO: Skal man kun sende de som er IKKE_SENDT? Hva med de som feiler?
     fun hentUsendteSmser(): List<Sms> {
         return jdbcTemplate.query("SELECT * FROM sms WHERE status = 'IKKE_SENDT'", SmsMapper())
     }
 
-    fun endreSendtStatus(sms: Sms, status: Status) {
-        jdbcTemplate.update("UPDATE sms SET status = ?, sendt = ? WHERE id = ?", status.name, LocalDateTime.now(), sms.id)
+    fun settSendt(id: String) {
+        jdbcTemplate.update("UPDATE sms SET status = ?, sendt = ? WHERE id = ?", Status.SENDT.name, LocalDateTime.now(), id)
+    }
+
+    fun settStatus(id: String, status: Status) {
+        jdbcTemplate.update("UPDATE sms SET status = ? WHERE id = ?", status.name, id)
     }
 
     fun hentSms(id: Number): Sms? {
