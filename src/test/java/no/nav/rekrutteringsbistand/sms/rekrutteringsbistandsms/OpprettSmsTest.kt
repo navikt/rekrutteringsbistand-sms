@@ -37,19 +37,20 @@ class OpprettSmsTest {
     }
 
     @Test
-    fun `POST til sms skal lagre i database`() {
+    fun `POST til sms skal lagre i database og sende SMSer`() {
         val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
+        Thread.sleep(500)
 
         enSmsTilOppretting.fnr.forEachIndexed { index, fnr ->
             val sms: Sms = repository.hentSms(index + 1)!!
             assertThat(sms.opprettet).isEqualToIgnoringSeconds(LocalDateTime.now())
-            assertThat(sms.sendt).isNull()
+            assertThat(sms.sendt).isEqualToIgnoringSeconds(LocalDateTime.now())
             assertThat(sms.melding).isEqualTo(enSmsTilOppretting.melding)
             assertThat(sms.fnr).isEqualTo(fnr)
             assertThat(sms.kandidatlisteId).isEqualTo(enSmsTilOppretting.kandidatlisteId)
             assertThat(sms.navident).isEqualTo("X123456")
-            assertThat(sms.status).isEqualTo(Status.IKKE_SENDT)
+            assertThat(sms.status).isEqualTo(Status.SENDT)
         }
     }
 }
