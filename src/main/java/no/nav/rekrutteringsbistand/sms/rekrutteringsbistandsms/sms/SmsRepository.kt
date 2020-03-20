@@ -10,8 +10,7 @@ import java.time.LocalDateTime
 @Repository
 class SmsRepository(
         private val jdbcTemplate: JdbcTemplate,
-        private val simpleJdbcInsert: SimpleJdbcInsert,
-        private val authUtils: AuthUtils
+        private val simpleJdbcInsert: SimpleJdbcInsert
 ) {
 
     companion object {
@@ -32,7 +31,7 @@ class SmsRepository(
             .withTableName(TABELL)
             .usingGeneratedKeyColumns(ID)
 
-    fun lagreSms(sms: OpprettSms) {
+    fun lagreSms(sms: OpprettSms, navident: String) {
         // TODO sjekk om ting gikk ok
         val smsRaderTilLagring: List<Map<String, Any?>> = sms.fnr.map {
             mapOf(
@@ -41,7 +40,7 @@ class SmsRepository(
                     MELDING to sms.melding,
                     FNR to it,
                     KANDIDATLISTE_ID to sms.kandidatlisteId,
-                    NAVIDENT to authUtils.hentNavident(),
+                    NAVIDENT to navident,
                     STATUS to Status.IKKE_SENDT.toString(),
                     GJENVÆRENDE_FORSØK to SendSmsService.MAKS_ANTALL_FORSØK
             )
@@ -52,6 +51,15 @@ class SmsRepository(
 
     fun hentUsendteSmser(): List<Sms> {
         return jdbcTemplate.query("SELECT * FROM sms WHERE status = 'IKKE_SENDT' OR status = 'FEIL'", SmsMapper())
+    }
+
+    fun smsForFnrPåKandidatlisteAlleredeLagret(fnr: String, kandidatlisteId: String): Boolean {
+        return jdbcTemplate.queryForObject(
+                "SELECT EXISTS (SELECT 1 FROM sms WHERE fnr = ? AND kandidatliste_id = ?)",
+                Boolean::class.java,
+                fnr,
+                kandidatlisteId
+        )
     }
 
     fun settSendt(id: String) {

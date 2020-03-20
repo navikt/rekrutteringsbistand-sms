@@ -2,7 +2,6 @@ package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import lombok.SneakyThrows
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil
 import org.flywaydb.core.Flyway
 import org.springframework.beans.factory.annotation.Value
@@ -31,7 +30,6 @@ class DatabaseConfig {
         return dataSource("user")
     }
 
-    @SneakyThrows
     private fun dataSource(user: String): HikariDataSource {
         val config = HikariConfig()
         config.jdbcUrl = databaseUrl

@@ -53,4 +53,11 @@ class OpprettSmsTest {
             assertThat(sms.status).isEqualTo(Status.SENDT)
         }
     }
+
+    @Test
+    fun `POST til sms skal returne 409 conflict hvis SMS med samme fnr og kandidatlisteId allerede er lagret`() {
+        repository.lagreSms(enSmsTilOppretting, "X123456")
+        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.CONFLICT)
+    }
 }
