@@ -1,8 +1,6 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 
 import no.bekk.bekkopen.person.FodselsnummerValidator.isValid
-import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.scheduler.SendSmsScheduler
-import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.scheduler.SendSmsService
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

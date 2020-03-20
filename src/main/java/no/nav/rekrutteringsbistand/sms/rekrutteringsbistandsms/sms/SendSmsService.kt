@@ -1,13 +1,13 @@
-package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.scheduler
+package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel.AltinnException
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel.AltinnVarselAdapter
-import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Sms
-import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsRepository
-import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Status
+import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.scheduler.ConcurrencyConfig
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
+import org.springframework.stereotype.Component
 import java.util.HashMap
 import java.util.concurrent.CompletableFuture
+import java.util.function.Supplier
 
 @Component
 class SendSmsService(
