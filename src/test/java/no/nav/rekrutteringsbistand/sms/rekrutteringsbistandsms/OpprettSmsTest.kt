@@ -55,9 +55,21 @@ class OpprettSmsTest {
     }
 
     @Test
-    fun `POST til sms skal returne 409 conflict hvis SMS med samme fnr og kandidatlisteId allerede er lagret`() {
+    fun `POST til sms skal returnere 409 conflict hvis SMS med samme fnr og kandidatlisteId allerede er lagret`() {
         repository.lagreSms(enSmsTilOppretting, "X123456")
         val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CONFLICT)
+    }
+
+    @Test
+    fun `POST til sms skal returnere 400 bad request hvis ugyldig fnr`() {
+        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOpprettingMedUgyldigFnr, null), String::class.java)
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `POST til sms skal returnere 400 bad request hvis meldingen er for lang`() {
+        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOpprettingMedForLangMelding, null), String::class.java)
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 }
