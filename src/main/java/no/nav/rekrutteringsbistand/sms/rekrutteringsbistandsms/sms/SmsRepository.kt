@@ -9,11 +9,10 @@ import java.time.LocalDateTime
 
 @Repository
 class SmsRepository(
-        val jdbcTemplate: JdbcTemplate,
-        simpleJdbcInsert: SimpleJdbcInsert,
-        val authUtils: AuthUtils
+        private val jdbcTemplate: JdbcTemplate,
+        private val simpleJdbcInsert: SimpleJdbcInsert,
+        private val authUtils: AuthUtils
 ) {
-
 
     companion object {
         const val TABELL = "sms"
@@ -44,8 +43,16 @@ class SmsRepository(
                     STATUS to Status.IKKE_SENDT.toString()
             )
         }
-        val antallLagret = smsInsert.executeBatch(*smsRaderTilLagring.toTypedArray())
-        log.info("Lagret $antallLagret SMSer i database")
+        val oppdaterteRader: IntArray = smsInsert.executeBatch(*smsRaderTilLagring.toTypedArray())
+        log.info("Lagret ${oppdaterteRader.sum()} SMSer i database")
+    }
+
+    fun hentUsendteSmser(): List<Sms> {
+        return jdbcTemplate.query("SELECT * FROM sms WHERE status = 'IKKE_SENDT'", SmsMapper())
+    }
+
+    fun endreSendtStatus(sms: Sms, status: Status) {
+        jdbcTemplate.update("UPDATE sms SET status = ?, sendt = ? WHERE id = ?", status.name, LocalDateTime.now(), sms.id)
     }
 
     fun hentSms(id: Number): Sms? {

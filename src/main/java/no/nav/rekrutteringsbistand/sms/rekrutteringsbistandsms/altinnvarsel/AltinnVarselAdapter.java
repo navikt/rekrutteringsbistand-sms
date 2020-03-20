@@ -59,7 +59,8 @@ public class AltinnVarselAdapter {
             iNotificationAgencyExternalBasic.sendStandaloneNotificationBasicV3(
                     varselProperties.getSystemBruker(),
                     varselProperties.getSystemPassord(),
-                    standaloneNotification);
+                    standaloneNotification
+            );
         } catch (INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage | RuntimeException e) {
             log.error("Feil ved varsling gjennom Altinn", e);
             throw new RuntimeException("Feil ved varsling gjennom Altinn");
