@@ -32,7 +32,6 @@ class SmsRepository(
             .usingGeneratedKeyColumns(ID)
 
     fun lagreSms(sms: OpprettSms, navident: String) {
-        // TODO sjekk om ting gikk ok
         val smsRaderTilLagring: List<Map<String, Any?>> = sms.fnr.map {
             mapOf(
                     OPPRETTET to LocalDateTime.now(),
