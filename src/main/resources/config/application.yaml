@@ -6,7 +6,7 @@ management:
   endpoints.web:
     exposure.include: info, health, metrics, prometheus
     base-path: /internal/actuator
-#  endpoint.health.show-details: always
+  endpoint.health.show-details: always
 
 spring:
   application:
