@@ -16,6 +16,7 @@ spec:
   readiness:
     path: /rekrutteringsbistand-sms/internal/actuator/health
     initialDelay: 30
+  preStopHookPath: /rekrutteringsbistand-sms/internal/preStopHook
   vault:
     enabled: true
     paths:
