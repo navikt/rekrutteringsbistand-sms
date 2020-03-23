@@ -12,10 +12,10 @@ spec:
     - https://arbeidsgiver.nais.preprod.local/rekrutteringsbistand-sms/
   liveness:
     path: /rekrutteringsbistand-sms/internal/actuator/health
-    initialDelay: 20
+    initialDelay: 30
   readiness:
     path: /rekrutteringsbistand-sms/internal/actuator/health
-    initialDelay: 20
+    initialDelay: 30
   vault:
     enabled: true
     paths:
