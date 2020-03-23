@@ -3,6 +3,8 @@ package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
+import net.javacrumbs.shedlock.core.LockAssert
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel.AltinnException
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel.AltinnVarselAdapter
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
@@ -21,8 +23,10 @@ class SendSmsService(
         const val PRØV_IGJEN_ETTER_MINUTTER = 15L
     }
 
-
+    @SchedulerLock(name = "sendSmsScheduler")
     fun sendSmserAsync() {
+        LockAssert.assertLocked()
+
         val usendteSmser = smsRepository.hentUsendteSmser()
                 .filter { it.gjenværendeForsøk > 0 }
                 .filter { it.sistFeilet?.plusMinutes(PRØV_IGJEN_ETTER_MINUTTER)?.isAfter(now()) ?: true }
