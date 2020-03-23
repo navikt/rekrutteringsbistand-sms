@@ -3,13 +3,11 @@ package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.AuthUtils
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @Protected
 @RestController
-class SendSmsController(
+class SmsController(
         private val smsRepository: SmsRepository,
         private val sendSmsService: SendSmsService,
         private val smsValidator: SmsValidator,
@@ -32,4 +30,9 @@ class SendSmsController(
                 .body(melding)
     }
 
+    @GetMapping("/sms/{kandidatlisteId}")
+    fun hentSmsStatuser(@PathVariable kandidatlisteId: String): ResponseEntity<List<SmsStatus>> {
+        val smsStatuser = smsRepository.hentSmser(kandidatlisteId).map { it.tilSmsStatus() }
+        return ResponseEntity.ok(smsStatuser)
+    }
 }

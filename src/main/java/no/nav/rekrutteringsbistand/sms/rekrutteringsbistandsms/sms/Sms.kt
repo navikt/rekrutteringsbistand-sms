@@ -13,7 +13,16 @@ data class Sms (
         val status: Status,
         val gjenværendeForsøk: Int,
         val sistFeilet: LocalDateTime?
-)
+) {
+    fun tilSmsStatus(): SmsStatus {
+        return SmsStatus(
+                fnr = this.fnr,
+                opprettet = this.opprettet,
+                sendt = this.sendt,
+                status = this.status
+        )
+    }
+}
 
 data class OpprettSms (
         val melding: String,

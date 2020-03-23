@@ -4,6 +4,7 @@ import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Sms
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsRepository
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Status
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -42,12 +43,12 @@ class OpprettSmsTest {
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
         Thread.sleep(500)
 
-        enSmsTilOppretting.fnr.forEachIndexed { index, fnr ->
-            val sms: Sms = repository.hentSms(index + 1)!!
+        val smser = repository.hentSmser(enSmsTilOppretting.kandidatlisteId)
+        smser.forEachIndexed { index, sms ->
             assertThat(sms.opprettet).isEqualToIgnoringSeconds(LocalDateTime.now())
             assertThat(sms.sendt).isEqualToIgnoringSeconds(LocalDateTime.now())
             assertThat(sms.melding).isEqualTo(enSmsTilOppretting.melding)
-            assertThat(sms.fnr).isEqualTo(fnr)
+            assertThat(sms.fnr).isEqualTo(enSmsTilOppretting.fnr[index])
             assertThat(sms.kandidatlisteId).isEqualTo(enSmsTilOppretting.kandidatlisteId)
             assertThat(sms.navident).isEqualTo("X123456")
             assertThat(sms.status).isEqualTo(Status.SENDT)
@@ -77,5 +78,12 @@ class OpprettSmsTest {
     fun `POST til sms skal returnere 400 bad request hvis listen med fnr er tom`() {
         val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsUtenFnr, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        enSmsTilOppretting.fnr.forEach {
+            repository.slettSms(it)
+        }
     }
 }

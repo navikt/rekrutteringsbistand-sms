@@ -76,7 +76,11 @@ class SmsRepository(
         )
     }
 
-    fun hentSms(id: Int): Sms? {
-        return jdbcTemplate.queryForObject("SELECT * FROM sms WHERE id = ? LIMIT 1", arrayOf<Any>(id), SmsMapper())
+    fun hentSmser(kandidatlisteId: String): List<Sms> {
+        return jdbcTemplate.query("SELECT * FROM sms WHERE kandidatliste_id = ?", arrayOf(kandidatlisteId), SmsMapper())
+    }
+
+    fun slettSms(fnr: String) {
+        jdbcTemplate.update("DELETE FROM sms WHERE fnr = ?", fnr)
     }
 }
