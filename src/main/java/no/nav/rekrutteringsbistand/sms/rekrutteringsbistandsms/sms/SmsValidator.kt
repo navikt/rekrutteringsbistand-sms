@@ -16,6 +16,14 @@ data class ValideringsResultat(
 class SmsValidator(private val smsRepository: SmsRepository) {
 
     fun valider(sms: OpprettSms): ValideringsResultat {
+        if (sms.fnr.isEmpty()) {
+            return ValideringsResultat(
+                    false,
+                    HttpStatus.BAD_REQUEST,
+                    "Minst ett fødselsnummer må sendes med"
+            )
+        }
+
         val fnrOk = sms.fnr.all { isValid(it) }
         if (!fnrOk) {
             return ValideringsResultat(

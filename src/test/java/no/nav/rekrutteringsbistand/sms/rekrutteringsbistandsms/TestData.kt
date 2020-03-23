@@ -16,3 +16,8 @@ val enSmsTilOpprettingMedForLangMelding = enSmsTilOppretting.copy(
         melding = "Hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei " +
                   "Hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei "
 )
+
+val enSmsUtenFnr = enSmsTilOppretting.copy(
+        melding = "Hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei " +
+                "Hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei "
+)
