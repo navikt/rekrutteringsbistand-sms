@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @Protected
 @RestController
-class SmsController(
+class SendSmsController(
         private val smsRepository: SmsRepository,
         private val sendSmsService: SendSmsService,
         private val smsValidator: SmsValidator,

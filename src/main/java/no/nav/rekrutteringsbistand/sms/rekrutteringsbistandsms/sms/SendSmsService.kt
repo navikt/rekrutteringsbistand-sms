@@ -1,26 +1,26 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel.AltinnException
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel.AltinnVarselAdapter
-import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.scheduler.ConcurrencyConfig
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime.now
-import java.util.HashMap
-import java.util.concurrent.CompletableFuture
-import java.util.function.Supplier
+import kotlin.system.measureTimeMillis
 
 @Component
 class SendSmsService(
         private val altinnVarselAdapter: AltinnVarselAdapter,
-        private val smsRepository: SmsRepository,
-        private val concurrencyConfig: ConcurrencyConfig
+        private val smsRepository: SmsRepository
 ) {
 
     companion object {
         const val MAKS_ANTALL_FORSØK = 10
         const val PRØV_IGJEN_ETTER_MINUTTER = 15L
     }
+
 
     fun sendSmserAsync() {
         val usendteSmser = smsRepository.hentUsendteSmser()
@@ -29,17 +29,20 @@ class SendSmsService(
 
         log.info("Fant ${usendteSmser.size} usendte SMSer")
 
-        val allFutures = HashMap<String, CompletableFuture<String>>()
+        val lås = Semaphore(5)
         usendteSmser.forEach {
-            allFutures[it.id] = CompletableFuture.supplyAsync(
-                    Supplier { sendSms(it) },
-                    concurrencyConfig.sendSmsExecutor()
-            )
+            GlobalScope.launch {
+                lås.acquire()
+                val tid = measureTimeMillis {
+                    sendSms(it)
+                }
+                log.info("Kall til Altinn tok ${tid}ms, id: ${it.id}")
+                lås.release()
+            }
         }
-        CompletableFuture.allOf(*allFutures.values.toTypedArray())
     }
 
-    fun sendSms(sms: Sms): String {
+    fun sendSms(sms: Sms) {
         smsRepository.settStatus(sms.id, Status.UNDER_UTSENDING)
         try {
             altinnVarselAdapter.sendVarsel(sms.fnr, sms.melding)
@@ -56,6 +59,5 @@ class SendSmsService(
                     tidspunkt = now()
             )
         }
-        return sms.id
     }
 }
