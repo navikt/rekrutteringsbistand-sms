@@ -37,19 +37,45 @@ class OpprettSmsTest {
     }
 
     @Test
-    fun `POST til sms skal lagre i database`() {
+    fun `POST til sms skal lagre i database og sende SMSer`() {
         val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
+        Thread.sleep(500)
 
         enSmsTilOppretting.fnr.forEachIndexed { index, fnr ->
             val sms: Sms = repository.hentSms(index + 1)!!
             assertThat(sms.opprettet).isEqualToIgnoringSeconds(LocalDateTime.now())
-            assertThat(sms.sendt).isNull()
+            assertThat(sms.sendt).isEqualToIgnoringSeconds(LocalDateTime.now())
             assertThat(sms.melding).isEqualTo(enSmsTilOppretting.melding)
             assertThat(sms.fnr).isEqualTo(fnr)
             assertThat(sms.kandidatlisteId).isEqualTo(enSmsTilOppretting.kandidatlisteId)
             assertThat(sms.navident).isEqualTo("X123456")
-            assertThat(sms.status).isEqualTo(Status.IKKE_SENDT)
+            assertThat(sms.status).isEqualTo(Status.SENDT)
         }
+    }
+
+    @Test
+    fun `POST til sms skal returnere 409 conflict hvis SMS med samme fnr og kandidatlisteId allerede er lagret`() {
+        repository.lagreSms(enSmsTilOppretting, "X123456")
+        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.CONFLICT)
+    }
+
+    @Test
+    fun `POST til sms skal returnere 400 bad request hvis ugyldig fnr`() {
+        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOpprettingMedUgyldigFnr, null), String::class.java)
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `POST til sms skal returnere 400 bad request hvis meldingen er for lang`() {
+        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOpprettingMedForLangMelding, null), String::class.java)
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `POST til sms skal returnere 400 bad request hvis listen med fnr er tom`() {
+        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsUtenFnr, null), String::class.java)
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 }

@@ -9,11 +9,9 @@ import java.time.LocalDateTime
 
 @Repository
 class SmsRepository(
-        val jdbcTemplate: JdbcTemplate,
-        simpleJdbcInsert: SimpleJdbcInsert,
-        val authUtils: AuthUtils
+        private val jdbcTemplate: JdbcTemplate,
+        private val simpleJdbcInsert: SimpleJdbcInsert
 ) {
-
 
     companion object {
         const val TABELL = "sms"
@@ -25,14 +23,15 @@ class SmsRepository(
         const val KANDIDATLISTE_ID = "kandidatliste_id"
         const val NAVIDENT = "navident"
         const val STATUS = "status"
+        const val GJENVÆRENDE_FORSØK = "gjenvarende_forsok"
+        const val SIST_FEILET = "sist_feilet"
     }
 
     private val smsInsert = simpleJdbcInsert
             .withTableName(TABELL)
             .usingGeneratedKeyColumns(ID)
 
-    fun lagreSms(sms: OpprettSms) {
-        // TODO sjekk om ting gikk ok
+    fun lagreSms(sms: OpprettSms, navident: String) {
         val smsRaderTilLagring: List<Map<String, Any?>> = sms.fnr.map {
             mapOf(
                     OPPRETTET to LocalDateTime.now(),
@@ -40,15 +39,44 @@ class SmsRepository(
                     MELDING to sms.melding,
                     FNR to it,
                     KANDIDATLISTE_ID to sms.kandidatlisteId,
-                    NAVIDENT to authUtils.hentNavident(),
-                    STATUS to Status.IKKE_SENDT.toString()
+                    NAVIDENT to navident,
+                    STATUS to Status.IKKE_SENDT.toString(),
+                    GJENVÆRENDE_FORSØK to SendSmsService.MAKS_ANTALL_FORSØK
             )
         }
-        val antallLagret = smsInsert.executeBatch(*smsRaderTilLagring.toTypedArray())
-        log.info("Lagret $antallLagret SMSer i database")
+        val oppdaterteRader: IntArray = smsInsert.executeBatch(*smsRaderTilLagring.toTypedArray())
+        log.info("Lagret ${oppdaterteRader.sum()} SMSer i database")
     }
 
-    fun hentSms(id: Number): Sms? {
+    fun hentUsendteSmser(): List<Sms> {
+        return jdbcTemplate.query("SELECT * FROM sms WHERE status = 'IKKE_SENDT' OR status = 'FEIL'", SmsMapper())
+    }
+
+    fun smsForFnrPåKandidatlisteAlleredeLagret(fnr: String, kandidatlisteId: String): Boolean {
+        return jdbcTemplate.queryForObject(
+                "SELECT EXISTS (SELECT 1 FROM sms WHERE fnr = ? AND kandidatliste_id = ?)",
+                Boolean::class.java,
+                fnr,
+                kandidatlisteId
+        )
+    }
+
+    fun settSendt(id: String) {
+        jdbcTemplate.update("UPDATE sms SET status = ?, sendt = ? WHERE id = ?", Status.SENDT.name, LocalDateTime.now(), id)
+    }
+
+    fun settStatus(id: String, status: Status) {
+        jdbcTemplate.update("UPDATE sms SET status = ? WHERE id = ?", status.name, id)
+    }
+
+    fun settFeil(id: String, status: Status, gjenværendeForsøk: Int, tidspunkt: LocalDateTime) {
+        jdbcTemplate.update(
+                "UPDATE sms SET status = ?, gjenvarende_forsok = ?, tidspunkt = ? WHERE id = ?",
+                status.name, gjenværendeForsøk, tidspunkt, id
+        )
+    }
+
+    fun hentSms(id: Int): Sms? {
         return jdbcTemplate.queryForObject("SELECT * FROM sms WHERE id = ? LIMIT 1", arrayOf<Any>(id), SmsMapper())
     }
 }

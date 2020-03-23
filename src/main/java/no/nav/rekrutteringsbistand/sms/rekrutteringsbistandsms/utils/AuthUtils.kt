@@ -1,4 +1,4 @@
-package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
+package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils
 
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.springframework.stereotype.Component
