@@ -29,7 +29,7 @@ class SendSmsService(
 
         val usendteSmser = smsRepository.hentUsendteSmser()
                 .filter { it.gjenværendeForsøk > 0 }
-                .filter { it.sistFeilet?.plusMinutes(PRØV_IGJEN_ETTER_MINUTTER)?.isAfter(now()) ?: true }
+                .filter { it.sistFeilet?.plusMinutes(PRØV_IGJEN_ETTER_MINUTTER)?.isBefore(now()) ?: true }
 
         log.info("Fant ${usendteSmser.size} usendte SMSer")
 

@@ -1,6 +1,8 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms
 
+import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SendSmsService
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsRepository
+import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsStatus
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Status
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -31,6 +33,9 @@ class OpprettSmsTest {
     @Autowired
     lateinit var repository: SmsRepository
 
+    @Autowired
+    lateinit var sendSmsService: SendSmsService
+
     @BeforeEach
     fun login() {
         restTemplate.getForObject("$baseUrl/local/login", String::class.java)
@@ -51,6 +56,24 @@ class OpprettSmsTest {
             assertThat(sms.kandidatlisteId).isEqualTo(enSmsTilOppretting.kandidatlisteId)
             assertThat(sms.navident).isEqualTo(enNavIdent)
             assertThat(sms.status).isEqualTo(Status.SENDT)
+        }
+    }
+
+    @Test
+    fun `Hvis en sending til Altinn feiler så skal man ikke prøve igjen innen 15 min etter sist feilet tidspunkt`() {
+        val nå = LocalDateTime.now()
+        repository.lagreSms(enSmsTilOppretting, enNavIdent)
+        repository.hentSmser(enSmsTilOppretting.kandidatlisteId).forEach {
+            repository.settFeil(it.id, Status.FEIL, 10, nå)
+        }
+        sendSmsService.sendSmserAsync()
+        Thread.sleep(500)
+
+        val smser = repository.hentSmser(enSmsTilOppretting.kandidatlisteId)
+        smser.forEach {
+            assertThat(it.status).isEqualTo(Status.FEIL)
+            assertThat(it.gjenværendeForsøk).isEqualTo(10)
+            assertThat(it.sistFeilet).isEqualTo(nå)
         }
     }
 
