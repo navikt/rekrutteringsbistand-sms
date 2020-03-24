@@ -61,15 +61,15 @@ class SmsRepository(
         )
     }
 
-    fun settSendt(id: String) {
+    fun settSendt(id: Int) {
         jdbcTemplate.update("UPDATE sms SET status = ?, sendt = ? WHERE id = ?", Status.SENDT.name, LocalDateTime.now(), id)
     }
 
-    fun settStatus(id: String, status: Status) {
+    fun settStatus(id: Int, status: Status) {
         jdbcTemplate.update("UPDATE sms SET status = ? WHERE id = ?", status.name, id)
     }
 
-    fun settFeil(id: String, status: Status, gjenværendeForsøk: Int, tidspunkt: LocalDateTime) {
+    fun settFeil(id: Int, status: Status, gjenværendeForsøk: Int, tidspunkt: LocalDateTime) {
         jdbcTemplate.update(
                 "UPDATE sms SET status = ?, gjenvarende_forsok = ?, tidspunkt = ? WHERE id = ?",
                 status.name, gjenværendeForsøk, tidspunkt, id

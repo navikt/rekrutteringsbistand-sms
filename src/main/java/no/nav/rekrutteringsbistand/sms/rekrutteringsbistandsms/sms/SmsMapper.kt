@@ -6,7 +6,7 @@ import java.sql.ResultSet
 class SmsMapper : RowMapper<Sms> {
     override fun mapRow(rs: ResultSet, i: Int) =
             Sms(
-                    id = rs.getString(SmsRepository.ID),
+                    id = rs.getInt(SmsRepository.ID),
                     opprettet = rs.getTimestamp(SmsRepository.OPPRETTET).toLocalDateTime(),
                     sendt = rs.getTimestamp(SmsRepository.SENDT)?.toLocalDateTime(),
                     melding = rs.getString(SmsRepository.MELDING),

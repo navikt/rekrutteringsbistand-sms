@@ -3,7 +3,7 @@ package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 import java.time.LocalDateTime
 
 data class Sms (
-        val id: String,
+        val id: Int,
         val opprettet: LocalDateTime,
         val sendt: LocalDateTime?,
         val melding: String,
