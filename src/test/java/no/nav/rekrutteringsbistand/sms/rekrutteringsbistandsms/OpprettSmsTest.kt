@@ -1,6 +1,5 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms
 
-import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Sms
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsRepository
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Status
 import org.assertj.core.api.Assertions.assertThat
@@ -50,14 +49,14 @@ class OpprettSmsTest {
             assertThat(sms.melding).isEqualTo(enSmsTilOppretting.melding)
             assertThat(sms.fnr).isEqualTo(enSmsTilOppretting.fnr[index])
             assertThat(sms.kandidatlisteId).isEqualTo(enSmsTilOppretting.kandidatlisteId)
-            assertThat(sms.navident).isEqualTo("X123456")
+            assertThat(sms.navident).isEqualTo(enNavIdent)
             assertThat(sms.status).isEqualTo(Status.SENDT)
         }
     }
 
     @Test
     fun `POST til sms skal returnere 409 conflict hvis SMS med samme fnr og kandidatlisteId allerede er lagret`() {
-        repository.lagreSms(enSmsTilOppretting, "X123456")
+        repository.lagreSms(enSmsTilOppretting, enNavIdent)
         val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CONFLICT)
     }

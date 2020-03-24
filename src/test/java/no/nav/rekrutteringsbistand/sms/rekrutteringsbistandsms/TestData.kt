@@ -18,6 +18,7 @@ val enSmsTilOpprettingMedForLangMelding = enSmsTilOppretting.copy(
 )
 
 val enSmsUtenFnr = enSmsTilOppretting.copy(
-        melding = "Hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei " +
-                "Hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei "
+        fnr = listOf()
 )
+
+const val enNavIdent = "X123456"
