@@ -49,12 +49,12 @@ class SmsRepository(
     }
 
     fun hentUsendteSmser(): List<Sms> {
-        return jdbcTemplate.query("SELECT * FROM sms WHERE status = 'IKKE_SENDT' OR status = 'FEIL'", SmsMapper())
+        return jdbcTemplate.query("SELECT * FROM $TABELL WHERE $STATUS = 'IKKE_SENDT' OR $STATUS = 'FEIL'", SmsMapper())
     }
 
     fun smsForFnrPåKandidatlisteAlleredeLagret(fnr: String, kandidatlisteId: String): Boolean {
         return jdbcTemplate.queryForObject(
-                "SELECT EXISTS (SELECT 1 FROM sms WHERE fnr = ? AND kandidatliste_id = ?)",
+                "SELECT EXISTS (SELECT 1 FROM $TABELL WHERE $FNR = ? AND $KANDIDATLISTE_ID = ?)",
                 Boolean::class.java,
                 fnr,
                 kandidatlisteId
@@ -62,25 +62,26 @@ class SmsRepository(
     }
 
     fun settSendt(id: Int) {
-        jdbcTemplate.update("UPDATE sms SET status = ?, sendt = ? WHERE id = ?", Status.SENDT.name, LocalDateTime.now(), id)
+        jdbcTemplate.update("UPDATE $TABELL SET $STATUS = ?, $SENDT = ? WHERE $ID = ?", Status.SENDT.name, LocalDateTime.now(), id)
     }
 
     fun settStatus(id: Int, status: Status) {
-        jdbcTemplate.update("UPDATE sms SET status = ? WHERE id = ?", status.name, id)
+        jdbcTemplate.update("UPDATE $TABELL SET $STATUS = ? WHERE $ID = ?", status.name, id)
     }
 
-    fun settFeil(id: Int, status: Status, gjenværendeForsøk: Int, tidspunkt: LocalDateTime) {
+    // TODO Legg til test som bruker denne metoden
+    fun settFeil(id: Int, status: Status, gjenværendeForsøk: Int, sistFeilet: LocalDateTime) {
         jdbcTemplate.update(
-                "UPDATE sms SET status = ?, gjenvarende_forsok = ?, tidspunkt = ? WHERE id = ?",
-                status.name, gjenværendeForsøk, tidspunkt, id
+                "UPDATE $TABELL SET $STATUS = ?, $GJENVÆRENDE_FORSØK = ?, $SIST_FEILET = ? WHERE $ID = ?",
+                status.name, gjenværendeForsøk, sistFeilet, id
         )
     }
 
     fun hentSmser(kandidatlisteId: String): List<Sms> {
-        return jdbcTemplate.query("SELECT * FROM sms WHERE kandidatliste_id = ?", arrayOf(kandidatlisteId), SmsMapper())
+        return jdbcTemplate.query("SELECT * FROM $TABELL WHERE $KANDIDATLISTE_ID = ?", arrayOf(kandidatlisteId), SmsMapper())
     }
 
     fun slettSms(fnr: String) {
-        jdbcTemplate.update("DELETE FROM sms WHERE fnr = ?", fnr)
+        jdbcTemplate.update("DELETE FROM $TABELL WHERE $FNR = ?", fnr)
     }
 }

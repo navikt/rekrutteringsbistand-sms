@@ -60,7 +60,7 @@ class SendSmsService(
                     id = sms.id,
                     status = Status.FEIL,
                     gjenværendeForsøk = gjenværendeForsøk,
-                    tidspunkt = now()
+                    sistFeilet = now()
             )
         }
     }
