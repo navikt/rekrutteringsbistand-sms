@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile({"dev", "prod"})
+@Profile("prod")
 public class AltinnVarselSamlConfiguration {
 
     private final AltinnVarselProperties varselProperties;

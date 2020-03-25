@@ -8,8 +8,8 @@ import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
-@Profile("lokal")
 @Component
+@Profile("lokal")
 class IntegrasjonerMockServer : InitializingBean, DisposableBean {
 
     private val server: WireMockServer
