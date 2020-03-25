@@ -8,11 +8,11 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel.AltinnException
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.altinnvarsel.AltinnVarselAdapter
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.time.LocalDateTime.now
 import kotlin.system.measureTimeMillis
 
-@Component
+@Service
 class SendSmsService(
         private val altinnVarselAdapter: AltinnVarselAdapter,
         private val smsRepository: SmsRepository
