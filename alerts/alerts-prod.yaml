@@ -10,6 +10,10 @@ spec:
       channel: 'inkludering-alerts-prod'
       prependText: '<!here> '
   alerts:
+    - alert: Feil ved sending av SMS via Altinn
+      expr: sum(increase(rekrutteringsbistand_sms_feilet_total[5m])) > 0
+      for: 1m
+      action: "Kibana: `application: rekrutteringsbistand-sms AND cluster: prod-fss AND level: Error`"
     - alert: rekrutteringsbistand-sms er nede
       expr: sum(up{app="rekrutteringsbistand-sms", job="kubernetes-pods"}) == 0
       for: 2m

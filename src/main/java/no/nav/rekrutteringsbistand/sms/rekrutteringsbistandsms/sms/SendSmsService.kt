@@ -71,7 +71,7 @@ class SendSmsService(
                     sistFeilet = now()
             )
 
-            log.warn("Kunne ikke sende SMS, id: ${sms.id}, gjenværende forøk: $gjenværendeForsøk")
+            log.error("Kunne ikke sende SMS, id: ${sms.id}, gjenværende forøk: $gjenværendeForsøk")
             smsFeiletMetrikk.increment()
         }
     }
