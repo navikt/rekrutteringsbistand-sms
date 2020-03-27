@@ -27,6 +27,11 @@ class SendSmsService(
         const val SMS_FEILET = "rekrutteringsbistand.sms-feilet"
     }
 
+    init {
+        meterRegistry.counter(SMS_SENDT)
+        meterRegistry.counter(SMS_FEILET)
+    }
+
     @SchedulerLock(name = "sendSmsScheduler")
     fun sendSmserAsync() {
         LockAssert.assertLocked()
