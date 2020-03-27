@@ -33,7 +33,7 @@ class MockLogin {
                 .claim("acr", "Level4")
                 .claim("NAVident", "X123456")
                 .issueTime(now)
-                .expirationTime(Date(now.time + 12960000L))
+                .expirationTime(Date(now.time + 52960000000L))
                 .build()
 
         val token = JwtTokenGenerator.createSignedJWT(JwkGenerator.getDefaultRSAKey(), claimSet)
