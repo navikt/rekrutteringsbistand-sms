@@ -27,10 +27,8 @@ class SendSmsService(
         const val SMS_FEILET = "rekrutteringsbistand.sms-feilet"
     }
 
-    init {
-        meterRegistry.counter(SMS_SENDT)
-        meterRegistry.counter(SMS_FEILET)
-    }
+    val smsSendtMetrikk = meterRegistry.counter(SMS_SENDT)
+    val smsFeiletMetrikk = meterRegistry.counter(SMS_FEILET)
 
     @SchedulerLock(name = "sendSmsScheduler")
     fun sendSmserAsync() {
@@ -62,7 +60,7 @@ class SendSmsService(
             smsRepository.settSendt(sms.id)
 
             log.info("Sendte SMS, id: ${sms.id}")
-            meterRegistry.counter(SMS_SENDT).increment()
+            smsSendtMetrikk.increment()
 
         } catch (exception: AltinnException) {
             val gjenværendeForsøk = if (sms.gjenværendeForsøk > 0) sms.gjenværendeForsøk - 1 else 0
@@ -74,7 +72,7 @@ class SendSmsService(
             )
 
             log.warn("Kunne ikke sende SMS, id: ${sms.id}, gjenværende forøk: $gjenværendeForsøk")
-            meterRegistry.counter(SMS_FEILET).increment()
+            smsFeiletMetrikk.increment()
         }
     }
 }
