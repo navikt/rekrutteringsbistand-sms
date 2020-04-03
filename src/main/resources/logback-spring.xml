@@ -9,8 +9,10 @@
         </appender>
     </springProfile>
     <springProfile name="dev | prod">
-        <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        <appender name="consoleAppender"  class="no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.fnrmaskering.MaskingAppender">
+            <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+            </appender>
         </appender>
         <logger name="jsonLogger" additivity="false" level="DEBUG">
             <appender-ref ref="consoleAppender"/>
