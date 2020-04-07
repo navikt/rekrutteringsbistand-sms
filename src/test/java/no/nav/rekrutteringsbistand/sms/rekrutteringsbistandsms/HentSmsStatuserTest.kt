@@ -52,6 +52,7 @@ class HentSmsStatuserTest {
         )
         assertThat(respons.statusCode).isEqualTo(HttpStatus.OK)
         respons.body!!.forEachIndexed { index, smsStatus ->
+            assertThat(smsStatus.id).isGreaterThan(0)
             assertThat(smsStatus.fnr).isEqualTo(enSmsTilOppretting.fnr[index])
             assertThat(smsStatus.opprettet).isEqualToIgnoringSeconds(LocalDateTime.now())
             assertThat(smsStatus.sendt).isEqualToIgnoringSeconds(LocalDateTime.now())

@@ -16,6 +16,7 @@ data class Sms (
 ) {
     fun tilSmsStatus(): SmsStatus {
         return SmsStatus(
+                id = this.id,
                 fnr = this.fnr,
                 opprettet = this.opprettet,
                 sendt = this.sendt,
