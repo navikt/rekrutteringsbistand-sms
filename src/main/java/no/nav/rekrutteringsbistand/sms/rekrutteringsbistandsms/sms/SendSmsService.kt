@@ -73,7 +73,7 @@ class SendSmsService(
 
             if (sms.gjenværendeForsøk == 0) {
                 smsFeiletMetrikk.increment()
-                log.error("Kunne ikke sende SMS. Ingen forsøk igjen.")
+                log.error("Kunne ikke sende SMS, id: ${sms.id}. Ingen forsøk igjen.")
             } else {
                 log.warn("Kunne ikke sende SMS, id: ${sms.id}, gjenværende forsøk: $gjenværendeForsøk")
             }
