@@ -62,7 +62,6 @@ public class AltinnVarselAdapter {
                     standaloneNotification
             );
         } catch (INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage | RuntimeException e) {
-            log.error("Feil ved varsling gjennom Altinn", e);
             throw new AltinnException("Feil ved varsling gjennom Altinn");
         }
     }
