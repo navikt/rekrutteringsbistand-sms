@@ -1,4 +1,4 @@
-apiVersion: "nais.io/v1alpha1"
+apiVersion: "nais.io/v1"
 kind: "Alert"
 metadata:
   name: rekrutteringsbistand-sms-alert
@@ -8,13 +8,13 @@ spec:
   receivers:
     slack:
       channel: 'inkludering-alerts-prod'
-      prependText: '<!here> '
+      prependText: 'rekrutteringsbistand-sms: '
   alerts:
     - alert: Feil ved sending av SMS via Altinn
       expr: sum(increase(rekrutteringsbistand_sms_feilet_total[5m])) > 0
       for: 1m
       action: "Kibana: `application: rekrutteringsbistand-sms AND cluster: prod-fss AND level: Error`"
-    - alert: rekrutteringsbistand-sms er nede
+    - alert: Applikasjonen er nede (ingen Kubernetes-pods er oppe)
       expr: sum(up{app="rekrutteringsbistand-sms", job="kubernetes-pods"}) == 0
       for: 2m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
@@ -23,17 +23,12 @@ spec:
       severity: danger
       expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-sms",log_level=~"Error"}[3m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-sms"}[3m]))) > 1
       for: 3m
-      action: "Sjekk loggene til app {{ $labels.log_app }} i namespace {{ $labels.log_namespace }}, for å se hvorfor det er så mye errors"
-    - alert: Høy økning log level WARNING
-      severity: danger
+      action: "Sjekk loggene til app {{ $labels.log_app }} i namespace {{ $labels.log_namespace }}, for å se hvorfor det er så mange errors"
+    - alert: Økning log level WARNING
+      severity: warning
       expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-sms",log_level=~"Warning"}[3m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-sms"}[3m]))) > 20
       for: 3m
-      action: "Sjekk loggene til app {{ $labels.log_app }} i namespace {{ $labels.log_namespace }}, for å se hvorfor det er så mye warnings"
-    - alert: Lav økning log level WARNING
-      severity: warning
-      expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-sms",log_level=~"Warning"}[3m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-sms"}[3m]))) > 1
-      for: 3m
-      action: "Sjekk loggene til app {{ $labels.log_app }} i namespace {{ $labels.log_namespace }}, for å se hvorfor det forekommer warnings"
+      action: "Sjekk loggene til app {{ $labels.log_app }} i namespace {{ $labels.log_namespace }}, for å se hvorfor det er så mange warnings"
     - alert: Feil i selftest
       severity: danger
       expr: selftests_aggregate_result_status{app="rekrutteringsbistand-sms"} > 0
