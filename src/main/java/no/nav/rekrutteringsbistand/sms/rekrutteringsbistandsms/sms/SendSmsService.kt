@@ -42,7 +42,7 @@ class SendSmsService(
 
         val lås = Semaphore(5)
         usendteSmser.forEach {
-            GlobalScope.launch {
+            GlobalScope.launch { // TODO: "Using async or launch on the instance of GlobalScope is highly discouraged." i følge https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-global-scope/index.html
                 lås.acquire()
                 val tid = measureTimeMillis {
                     sendSms(it)
