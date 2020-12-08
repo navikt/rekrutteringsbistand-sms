@@ -2,6 +2,7 @@
 
 Trigger sending av SMS til brukere.
 
+
 # Henvendelser
 
 ## For Nav-ansatte
