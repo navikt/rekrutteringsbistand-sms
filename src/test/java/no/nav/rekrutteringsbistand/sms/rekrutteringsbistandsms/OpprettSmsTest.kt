@@ -2,7 +2,6 @@ package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms
 
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SendSmsService
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsRepository
-import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsStatus
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Status
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -18,7 +17,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.LocalDateTime
+
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -43,14 +42,15 @@ class OpprettSmsTest {
 
     @Test
     fun `POST til sms skal lagre i database og sende SMSer`() {
-        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
+        val respons =
+            restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
         Thread.sleep(500)
 
         val smser = repository.hentSmser(enSmsTilOppretting.kandidatlisteId)
         smser.forEachIndexed { index, sms ->
-            assertThat(sms.opprettet).isEqualToIgnoringSeconds(LocalDateTime.now())
-            assertThat(sms.sendt).isEqualToIgnoringSeconds(LocalDateTime.now())
+            assertThat(sms.opprettet).isEqualToIgnoringSeconds(now())
+            assertThat(sms.sendt).isEqualToIgnoringSeconds(now())
             assertThat(sms.melding).isEqualTo(enSmsTilOppretting.melding)
             assertThat(sms.fnr).isEqualTo(enSmsTilOppretting.fnr[index])
             assertThat(sms.kandidatlisteId).isEqualTo(enSmsTilOppretting.kandidatlisteId)
@@ -61,7 +61,7 @@ class OpprettSmsTest {
 
     @Test
     fun `Hvis en sending til Altinn feiler så skal man ikke prøve igjen innen 15 min etter sist feilet tidspunkt`() {
-        val nå = LocalDateTime.now()
+        val nå = now()
         repository.lagreSms(enSmsTilOppretting, enNavIdent)
         repository.hentSmser(enSmsTilOppretting.kandidatlisteId).forEach {
             repository.settFeil(it.id, Status.FEIL, 10, nå)
@@ -80,19 +80,28 @@ class OpprettSmsTest {
     @Test
     fun `POST til sms skal returnere 409 conflict hvis SMS med samme fnr og kandidatlisteId allerede er lagret`() {
         repository.lagreSms(enSmsTilOppretting, enNavIdent)
-        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
+        val respons =
+            restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CONFLICT)
     }
 
     @Test
     fun `POST til sms skal returnere 400 bad request hvis ugyldig fnr`() {
-        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOpprettingMedUgyldigFnr, null), String::class.java)
+        val respons = restTemplate.postForEntity(
+            "$baseUrl/sms",
+            HttpEntity(enSmsTilOpprettingMedUgyldigFnr, null),
+            String::class.java
+        )
         assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 
     @Test
     fun `POST til sms skal returnere 400 bad request hvis meldingen er for lang`() {
-        val respons = restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOpprettingMedForLangMelding, null), String::class.java)
+        val respons = restTemplate.postForEntity(
+            "$baseUrl/sms",
+            HttpEntity(enSmsTilOpprettingMedForLangMelding, null),
+            String::class.java
+        )
         assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 
