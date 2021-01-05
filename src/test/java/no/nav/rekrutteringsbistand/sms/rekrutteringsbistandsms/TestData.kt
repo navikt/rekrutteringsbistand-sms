@@ -26,10 +26,9 @@ val enSmsUtenFnr = enSmsTilOppretting.copy(
 const val enNavIdent = "X123456"
 
 /**
- * Ensure the precision is no more than milliseconds, since Mac and Windows operating systems differ,
- * plus ensure unique timestamps in case this method is called multiple times during one millisecond.
+ * Unngå feilende asserts pga. ulik presisjon på timestamps mellom Mac og Windows
  */
 fun now(): LocalDateTime {
-    Thread.sleep(1)
-    return now().truncatedTo(ChronoUnit.MILLENNIA)
+    Thread.sleep(1) // Sikre unike timestamps når innneværende metode kalles flere ganger i samme millisekund
+    return LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)
 }

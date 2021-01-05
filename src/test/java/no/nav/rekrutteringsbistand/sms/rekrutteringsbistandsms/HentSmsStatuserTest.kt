@@ -42,7 +42,7 @@ class HentSmsStatuserTest {
     @Test
     fun `GET mot sms skal returnere SMS-statuser`() {
         restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
-        Thread.sleep(500)
+        Thread.sleep(1500)
 
         val respons: ResponseEntity<List<SmsStatus>> = restTemplate.exchange(
                 "$baseUrl/sms/${enSmsTilOppretting.kandidatlisteId}",

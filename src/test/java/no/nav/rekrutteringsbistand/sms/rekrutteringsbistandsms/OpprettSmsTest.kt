@@ -17,7 +17,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.LocalDateTime
+
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -49,8 +49,8 @@ class OpprettSmsTest {
 
         val smser = repository.hentSmser(enSmsTilOppretting.kandidatlisteId)
         smser.forEachIndexed { index, sms ->
-            assertThat(sms.opprettet).isEqualToIgnoringSeconds(LocalDateTime.now())
-            assertThat(sms.sendt).isEqualToIgnoringSeconds(LocalDateTime.now())
+            assertThat(sms.opprettet).isEqualToIgnoringSeconds(now())
+            assertThat(sms.sendt).isEqualToIgnoringSeconds(now())
             assertThat(sms.melding).isEqualTo(enSmsTilOppretting.melding)
             assertThat(sms.fnr).isEqualTo(enSmsTilOppretting.fnr[index])
             assertThat(sms.kandidatlisteId).isEqualTo(enSmsTilOppretting.kandidatlisteId)
