@@ -19,6 +19,11 @@
         </logger>
     </springProfile>
     <logger name="no.nav.vault.jdbc" level="WARN" />
+
+    <!-- TODO Are: Legg til disse for å unngå støy/warnings i apploggen som vi rutinemessig ignorerer, hvis det ikke hjelper å oppgradere avhengigehter i pom.xml    -->
+<!--    <logger name="org.apache.cxf.ws.addressing.soap.MAPCodec" level="ERROR" />-->
+<!--    <logger name="org.apache.cxf.ws.addressing.ContextUtils" level="ERROR" />-->
+
     <root level="INFO">
         <appender-ref ref="consoleAppender"/>
     </root>
