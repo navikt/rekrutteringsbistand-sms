@@ -1,0 +1,35 @@
+apiVersion: "nais.io/v1"
+kind: "Alert"
+metadata:
+  name: rekrutteringsbistand-sms-alert
+  namespace: arbeidsgiver
+  labels:
+    team: arbeidsgiver
+spec:
+  receivers:
+    slack:
+      channel: 'inkludering-alerts-prod'
+  alerts:
+    - alert: Applikasjonen nede
+      expr: sum(up{app="rekrutteringsbistand-sms", job="kubernetes-pods"}) == 0
+      for: 1s
+      description: "rekrutteringsbistand-sms er nede"
+      action: "https://logs.adeo.no/goto/c35f1545a01fc97aa82e4cfe836f1683"
+
+    - alert: Det har skjedd en feil i rekrutteringsbistand-sms
+      expr: sum(increase(logd_messages_total{log_app="rekrutteringsbistand-sms", log_level="Error"}[10m])) > 0
+      for: 10s
+      description: "rekrutteringsbistand-sms har logget en feil"
+      action: "https://logs.adeo.no/goto/c35f1545a01fc97aa82e4cfe836f1683"
+
+    - alert: Økning HTTP serverfeil (5xx responser) i rekrutteringsbistand-sms
+      severity: danger
+      expr: (100 * (sum by (backend) (rate(traefik_backend_requests_total{code=~"^5\\d\\d", backend=~"arbeidsgiver.nais.*/rekrutteringsbistand-sms/*"}[3m])) / sum by (backend) (rate(traefik_backend_requests_total{backend=~"arbeidsgiver.nais.*/rekrutteringsbistand-sms/*"}[3m])))) > 1
+      for: 3m
+      action: "https://logs.adeo.no/goto/c35f1545a01fc97aa82e4cfe836f1683"
+
+    - alert: Økning HTTP klientfeil (4xx responser andre enn 401) i rekrutteringsbistand-sms
+      severity: warning
+      expr: (100 * (sum by (backend) (rate(traefik_backend_requests_total{code=~"^4\\d[0,2-9]", backend=~"arbeidsgiver.nais.*/rekrutteringsbistand-sms/*"}[3m])) / sum by (backend) (rate(traefik_backend_requests_total{backend=~"arbeidsgiver.nais.*/rekrutteringsbistand-sms/*"}[3m])))) > 20
+      for: 3m
+      action: "https://logs.adeo.no/goto/c35f1545a01fc97aa82e4cfe836f1683"

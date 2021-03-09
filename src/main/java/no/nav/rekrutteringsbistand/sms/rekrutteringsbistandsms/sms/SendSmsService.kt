@@ -24,11 +24,9 @@ class SendSmsService(
         const val MAKS_ANTALL_FORSØK = 10
         const val PRØV_IGJEN_ETTER_MINUTTER = 15L
         const val SMS_SENDT = "rekrutteringsbistand.sms-sendt"
-        const val SMS_FEILET = "rekrutteringsbistand.sms-feilet"
     }
 
     val smsSendtMetrikk = meterRegistry.counter(SMS_SENDT)
-    val smsFeiletMetrikk = meterRegistry.counter(SMS_FEILET)
 
     @SchedulerLock(name = "sendSmsScheduler")
     fun sendSmserAsync() {
@@ -72,7 +70,6 @@ class SendSmsService(
             )
 
             if (sms.gjenværendeForsøk == 0) {
-                smsFeiletMetrikk.increment()
                 log.error("Kunne ikke sende SMS, id: ${sms.id}. Ingen forsøk igjen.", exception)
             } else {
                 log.warn("Kunne ikke sende SMS, id: ${sms.id}, gjenværende forsøk: $gjenværendeForsøk", exception)
