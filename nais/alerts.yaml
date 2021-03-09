@@ -11,10 +11,6 @@ spec:
       channel: 'inkludering-alerts-prod'
       prependText: 'rekrutteringsbistand-sms: '
   alerts:
-    - alert: Feil ved sending av SMS via Altinn
-      expr: sum(increase(rekrutteringsbistand_sms_feilet_total[5m])) > 0
-      for: 1m
-      action: "Kibana: https://logs.adeo.no/goto/c35f1545a01fc97aa82e4cfe836f1683"
     - alert: Applikasjonen er nede (ingen Kubernetes-pods er oppe)
       expr: sum(up{app="rekrutteringsbistand-sms", job="kubernetes-pods"}) == 0
       for: 2m
