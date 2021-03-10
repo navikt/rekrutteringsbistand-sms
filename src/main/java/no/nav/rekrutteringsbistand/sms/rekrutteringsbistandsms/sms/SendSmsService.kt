@@ -70,9 +70,7 @@ class SendSmsService(
             )
 
             if (sms.gjenværendeForsøk == 0) {
-                log.error("Kunne ikke sende SMS, id: ${sms.id}. Ingen forsøk igjen.", exception)
-            } else {
-                log.warn("Kunne ikke sende SMS, id: ${sms.id}, gjenværende forsøk: $gjenværendeForsøk", exception)
+                log.warn("Kunne ikke sende SMS, id: ${sms.id}, har feilet $MAKS_ANTALL_FORSØK ganger, prøver ikke igjen", exception)
             }
         }
     }
