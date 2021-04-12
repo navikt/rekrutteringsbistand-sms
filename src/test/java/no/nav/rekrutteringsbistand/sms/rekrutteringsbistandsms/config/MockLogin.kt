@@ -1,4 +1,4 @@
-package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.mock
+package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.config
 
 import com.nimbusds.jwt.JWTClaimsSet
 import no.nav.security.token.support.core.api.Unprotected
@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse
 
 @Import(TokenGeneratorConfiguration::class)
 @RestController
-@Profile("lokal")
 class MockLogin {
 
     /**

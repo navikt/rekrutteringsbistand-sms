@@ -1,4 +1,4 @@
-package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.mock
+package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.config
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("lokal")
 class IntegrasjonerMockServer : InitializingBean, DisposableBean {
 
     private val server: WireMockServer
