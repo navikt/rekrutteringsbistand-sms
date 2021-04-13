@@ -15,13 +15,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate.HttpClientOptio
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("lokal")
 class OpprettSmsTest {
 
     @LocalServerPort
