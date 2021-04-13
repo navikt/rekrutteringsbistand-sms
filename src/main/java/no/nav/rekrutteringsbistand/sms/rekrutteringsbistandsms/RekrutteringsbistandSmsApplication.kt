@@ -7,10 +7,7 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication
 @EnableConfigurationProperties
-@EnableJwtTokenValidation(ignore = [
-    "org.springframework",
-    "springfox.documentation.swagger.web.ApiResourceController"
-])
+@EnableJwtTokenValidation(ignore = ["org.springframework"])
 class RekrutteringsbistandSmsApplication
 
 fun main(args: Array<String>) {

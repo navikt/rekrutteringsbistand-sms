@@ -35,7 +35,7 @@ class HentSmsStatuserTest {
 
     @BeforeEach
     fun login() {
-        restTemplate.getForObject("$baseUrl/local/login", String::class.java)
+        restTemplate.getForObject("$baseUrl/veileder-token-cookie", String::class.java)
     }
 
     @Test
