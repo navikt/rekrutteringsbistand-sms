@@ -1,45 +1,34 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.config
 
-import com.nimbusds.jwt.JWTClaimsSet
+import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.ISSUER_ISSO
+import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.token.support.core.api.Unprotected
-import no.nav.security.token.support.test.JwkGenerator
-import no.nav.security.token.support.test.JwtTokenGenerator
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
+import no.nav.security.token.support.spring.test.MockOAuth2ServerAutoConfiguration
 import org.springframework.context.annotation.Import
-import org.springframework.context.annotation.Profile
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 
-@Import(TokenGeneratorConfiguration::class)
+@Import(MockOAuth2ServerAutoConfiguration::class)
 @RestController
-class MockLogin {
+class MockLogin(val mockOauth2Server: MockOAuth2Server) {
 
-    /**
-     *  Lager egen login controller siden token-validation-test-support ikke legger med NAVident claimet i sin login
-     *  https://github.com/navikt/token-support/blob/master/token-validation-test-support/src/main/java/no/nav/security/token/support/test/JwtTokenGenerator.java#L45
-     */
     @Unprotected
-    @GetMapping("/local/login")
-    fun addCookie(response: HttpServletResponse): Cookie? {
-        val now = Date()
-        val claimSet = JWTClaimsSet.Builder()
-                .subject("01234567890")
-                .issuer("iss-localhost")
-                .audience("aud-localhost")
-                .claim("acr", "Level4")
-                .claim("NAVident", "X123456")
-                .issueTime(now)
-                .expirationTime(Date(now.time + 52960000000L))
-                .build()
+    @GetMapping("/veileder-token-cookie")
+    fun getVeilederTokenCookie(response: HttpServletResponse) {
 
-        val token = JwtTokenGenerator.createSignedJWT(JwkGenerator.getDefaultRSAKey(), claimSet)
-        val cookie = Cookie("localhost-idtoken", token.serialize())
-        cookie.domain = "localhost"
-        cookie.path = "/"
+        val token = mockOauth2Server.issueToken(
+                issuerId = ISSUER_ISSO,
+                subject = "brukes-ikke",
+                claims = mapOf(
+                        "unique_name" to "Clark.Kent@nav.no",
+                        "NAVident" to "X123456",
+                        "name" to "Clark Kent"
+                )
+        )
+
+        val cookie = Cookie("isso-idtoken", token.serialize())
         response.addCookie(cookie)
-        return cookie
     }
 }
