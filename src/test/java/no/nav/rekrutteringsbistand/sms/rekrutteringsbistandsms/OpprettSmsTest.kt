@@ -64,7 +64,7 @@ class OpprettSmsTest {
         repository.hentSmser(enSmsTilOppretting.kandidatlisteId).forEach {
             repository.settFeil(it.id, Status.FEIL, 10, nå)
         }
-        sendSmsService.sendSmserAsync()
+        sendSmsService.sendSmserSynkront()
         Thread.sleep(500)
 
         val smser = repository.hentSmser(enSmsTilOppretting.kandidatlisteId)

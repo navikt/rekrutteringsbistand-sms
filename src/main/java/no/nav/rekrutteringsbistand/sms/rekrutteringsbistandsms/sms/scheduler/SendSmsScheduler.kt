@@ -17,7 +17,7 @@ class SendSmsScheduler(private val sendSmsService: SendSmsService) {
     @Scheduled(cron = HVERT_MINUTT)
     fun skedulertSmsutsending() {
         if (skalKjøreSkedulertSmsutsending.get()) {
-            sendSmsService.sendSmserAsync()
+            sendSmsService.sendSmserSynkront()
         }
     }
 

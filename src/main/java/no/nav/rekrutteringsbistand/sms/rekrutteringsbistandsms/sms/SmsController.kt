@@ -1,5 +1,7 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.AuthUtils
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
 import no.nav.security.token.support.core.api.Protected
@@ -23,7 +25,9 @@ class SmsController(
                 sms = sms,
                 navident = authUtils.hentNavident()
             )
-            sendSmsService.sendSmserAsync()
+            GlobalScope.launch {
+                sendSmsService.sendSmserSynkront()
+            }
         } else {
             log.warn("Kunne ikke sende SMS tıl kandidater på kandidatliste med id ${sms.kandidatlisteId}, årsak: $melding")
         }

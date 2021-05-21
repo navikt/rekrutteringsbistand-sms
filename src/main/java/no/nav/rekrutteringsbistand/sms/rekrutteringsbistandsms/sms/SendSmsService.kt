@@ -1,8 +1,7 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 
 import io.micrometer.core.instrument.MeterRegistry
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Semaphore
 import net.javacrumbs.shedlock.core.LockAssert
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
@@ -29,8 +28,13 @@ class SendSmsService(
     val smsSendtMetrikk = meterRegistry.counter(SMS_SENDT)
 
     @SchedulerLock(name = "sendSmsScheduler")
-    fun sendSmserAsync() {
+    fun sendSmserSynkront() {
         LockAssert.assertLocked()
+
+        log.info("Skal sende SMSer");
+
+
+        // Skal ikke komme forbi denne linjen
 
         val usendteSmser = smsRepository.hentUsendteSmser()
                 .filter { it.gjenværendeForsøk > 0 }
@@ -38,17 +42,35 @@ class SendSmsService(
 
         log.info("Fant ${usendteSmser.size} usendte SMSer")
 
-        val lås = Semaphore(5)
-        usendteSmser.forEach {
-            GlobalScope.launch { // TODO: "Using async or launch on the instance of GlobalScope is highly discouraged." i følge https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-global-scope/index.html
-                lås.acquire()
-                val tid = measureTimeMillis {
-                    sendSms(it)
+        runBlocking {
+            val lås = Semaphore(5)
+            val utsendinger = usendteSmser.map {
+                async { // TODO: "Using async or launch on the instance of GlobalScope is highly discouraged." i følge https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-global-scope/index.html
+                    lås.acquire()
+                    val tid = measureTimeMillis {
+                        sendSms(it)
+                    }
+                    log.info("Kall til Altinn tok ${tid}ms, id: ${it.id}")
+                    lås.release()
                 }
-                log.info("Kall til Altinn tok ${tid}ms, id: ${it.id}")
-                lås.release()
+            }
+            utsendinger.awaitAll()
+        }
+
+
+        /*
+        val lås = Semaphore(5)
+        val utsendinger = usendteSmser.map {
+            async {
+                lås.withPermit {
+                    // Send SMS
+                }
             }
         }
+        val responses = utsendinger.awaitAll()
+         */
+
+        log.info("Ferdig med all sending")
     }
 
     fun sendSms(sms: Sms) {
