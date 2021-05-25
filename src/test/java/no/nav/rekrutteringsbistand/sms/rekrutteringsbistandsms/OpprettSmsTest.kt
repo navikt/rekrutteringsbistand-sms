@@ -43,6 +43,9 @@ class OpprettSmsTest {
         val respons =
             restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
+
+        sendSmsService.sendSmserAsync()
+
         Thread.sleep(500)
 
         val smser = repository.hentSmser(enSmsTilOppretting.kandidatlisteId)
