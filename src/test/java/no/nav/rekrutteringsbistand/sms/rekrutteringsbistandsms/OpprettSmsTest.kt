@@ -44,7 +44,7 @@ class OpprettSmsTest {
             restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
 
-        sendSmsService.sendSmserAsync()
+        sendSmsService.sendSmser()
 
         Thread.sleep(500)
 
