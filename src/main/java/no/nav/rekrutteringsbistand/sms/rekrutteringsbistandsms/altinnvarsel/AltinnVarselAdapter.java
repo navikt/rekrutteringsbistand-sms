@@ -42,7 +42,7 @@ public class AltinnVarselAdapter {
         return new JAXBElement<>(new QName(NAMESPACE, localpart), Boolean.class, value);
     }
 
-    public void sendVarsel(String fnr, String varseltekst) throws InterruptedException {
+    public void sendVarsel(String fnr, String varseltekst) {
         StandaloneNotificationBEList standaloneNotification = new StandaloneNotificationBEList().withStandaloneNotification(new StandaloneNotification()
                 .withIsReservable(ns("IsReservable", false))
                 .withLanguageID(1044)

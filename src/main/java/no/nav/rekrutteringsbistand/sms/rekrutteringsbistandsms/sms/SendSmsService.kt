@@ -38,11 +38,11 @@ class SendSmsService(
 
         log.info("Kjører SMS-scheduler, fant ${usendteSmser.size} usendte SMSer")
 
-        val myPool = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
+        val smsThreadPool = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
         val totalTidsbrukMs = measureTimeMillis {
             runBlocking {
                 usendteSmser.forEach {
-                    launch(myPool) {
+                    launch(smsThreadPool) {
                         val tid = measureTimeMillis {
                             sendSms(it)
                         }
