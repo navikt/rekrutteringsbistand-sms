@@ -9,12 +9,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 class SendSmsScheduler(private val sendSmsService: SendSmsService) {
 
     companion object {
-        const val HVERT_MINUTT = "0 */1 * * * *"
+        const val HVERT_ANDRE_MINUTT = "0 */2 * * * *"
     }
 
     private val skalKjøreSkedulertSmsutsending = AtomicBoolean(true)
 
-    @Scheduled(cron = HVERT_MINUTT)
+    @Scheduled(cron = HVERT_ANDRE_MINUTT)
     fun skedulertSmsutsending() {
         if (skalKjøreSkedulertSmsutsending.get()) {
             sendSmsService.sendSmserAsync()
