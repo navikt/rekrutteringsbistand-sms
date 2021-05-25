@@ -23,7 +23,6 @@ class SmsController(
                 sms = sms,
                 navident = authUtils.hentNavident()
             )
-            sendSmsService.sendSmserAsync()
         } else {
             log.warn("Kunne ikke sende SMS tıl kandidater på kandidatliste med id ${sms.kandidatlisteId}, årsak: $melding")
         }
