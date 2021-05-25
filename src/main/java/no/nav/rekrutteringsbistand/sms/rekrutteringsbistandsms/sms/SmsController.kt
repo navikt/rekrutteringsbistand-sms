@@ -1,7 +1,5 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.AuthUtils
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
 import no.nav.security.token.support.core.api.Protected
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class SmsController(
     private val smsRepository: SmsRepository,
-    private val sendSmsService: SendSmsService,
     private val smsValidator: SmsValidator,
     private val authUtils: AuthUtils
 ) {

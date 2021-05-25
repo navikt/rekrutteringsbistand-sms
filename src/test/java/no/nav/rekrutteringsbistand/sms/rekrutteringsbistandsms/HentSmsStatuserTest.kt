@@ -47,8 +47,6 @@ class HentSmsStatuserTest {
         restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         sendSmsService.sendSmser()
 
-        Thread.sleep(1500)
-
         val respons: ResponseEntity<List<SmsStatus>> = restTemplate.exchange(
             "$baseUrl/sms/${enSmsTilOppretting.kandidatlisteId}",
             HttpMethod.GET,
