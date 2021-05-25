@@ -1,5 +1,6 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms
 
+import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SendSmsService
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsRepository
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsStatus
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Status
@@ -33,6 +34,9 @@ class HentSmsStatuserTest {
     @Autowired
     lateinit var repository: SmsRepository
 
+    @Autowired
+    lateinit var sendSmsService: SendSmsService
+
     @BeforeEach
     fun login() {
         restTemplate.getForObject("$baseUrl/veileder-token-cookie", String::class.java)
@@ -41,6 +45,8 @@ class HentSmsStatuserTest {
     @Test
     fun `GET mot sms skal returnere SMS-statuser`() {
         restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
+        sendSmsService.sendSmserAsync()
+
         Thread.sleep(1500)
 
         val respons: ResponseEntity<List<SmsStatus>> = restTemplate.exchange(
