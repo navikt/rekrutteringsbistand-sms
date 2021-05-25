@@ -25,9 +25,6 @@ class SmsController(
                 sms = sms,
                 navident = authUtils.hentNavident()
             )
-            GlobalScope.launch {
-                sendSmsService.sendSmserSynkront()
-            }
         } else {
             log.warn("Kunne ikke sende SMS tıl kandidater på kandidatliste med id ${sms.kandidatlisteId}, årsak: $melding")
         }

@@ -43,8 +43,6 @@ public class AltinnVarselAdapter {
     }
 
     public void sendVarsel(String fnr, String varseltekst) throws InterruptedException {
-        log.info("Sender SMS...");
-        Thread.sleep(120000L);
         StandaloneNotificationBEList standaloneNotification = new StandaloneNotificationBEList().withStandaloneNotification(new StandaloneNotification()
                 .withIsReservable(ns("IsReservable", false))
                 .withLanguageID(1044)
