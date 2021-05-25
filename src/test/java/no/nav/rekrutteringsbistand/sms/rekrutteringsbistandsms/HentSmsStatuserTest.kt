@@ -45,7 +45,7 @@ class HentSmsStatuserTest {
     @Test
     fun `GET mot sms skal returnere SMS-statuser`() {
         restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
-        sendSmsService.sendSmserAsync()
+        sendSmsService.sendSmser()
 
         Thread.sleep(1500)
 

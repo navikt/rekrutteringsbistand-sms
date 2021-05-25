@@ -39,24 +39,20 @@ class OpprettSmsTest {
     }
 
     @Test
-    fun `POST til sms skal lagre i database og sende SMSer`() {
+    fun `POST til sms skal lagre i database`() {
         val respons =
             restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
 
-        sendSmsService.sendSmserAsync()
-
-        Thread.sleep(500)
-
         val smser = repository.hentSmser(enSmsTilOppretting.kandidatlisteId)
         smser.forEachIndexed { index, sms ->
             assertThat(sms.opprettet).isEqualToIgnoringSeconds(now())
-            assertThat(sms.sendt).isEqualToIgnoringSeconds(now())
             assertThat(sms.melding).isEqualTo(enSmsTilOppretting.melding)
             assertThat(sms.fnr).isEqualTo(enSmsTilOppretting.fnr[index])
             assertThat(sms.kandidatlisteId).isEqualTo(enSmsTilOppretting.kandidatlisteId)
             assertThat(sms.navident).isEqualTo(enNavIdent)
-            assertThat(sms.status).isEqualTo(Status.SENDT)
+            assertThat(sms.status).isEqualTo(Status.IKKE_SENDT)
+            assertThat(sms.sendt).isNull()
         }
     }
 
@@ -67,7 +63,7 @@ class OpprettSmsTest {
         repository.hentSmser(enSmsTilOppretting.kandidatlisteId).forEach {
             repository.settFeil(it.id, Status.FEIL, 10, nå)
         }
-        sendSmsService.sendSmserAsync()
+        sendSmsService.sendSmser()
         Thread.sleep(500)
 
         val smser = repository.hentSmser(enSmsTilOppretting.kandidatlisteId)

@@ -1,5 +1,7 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.AuthUtils
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
 import no.nav.security.token.support.core.api.Protected
