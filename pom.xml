@@ -14,7 +14,7 @@
     <name>rekrutteringsbistand-sms</name>
 
     <properties>
-        <java.version>14</java.version>
+        <java.version>17</java.version>
         <kotlin.version>1.4.32</kotlin.version>
     </properties>
 
