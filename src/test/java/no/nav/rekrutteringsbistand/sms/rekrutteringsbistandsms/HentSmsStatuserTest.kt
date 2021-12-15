@@ -75,6 +75,53 @@ class HentSmsStatuserTest {
         assertThat(respons.body!!).isEmpty()
     }
 
+
+    @Test
+    fun `Kall for å hente smser for en person skal returnere SMS-statuser`() {
+
+        val fnr = enAnnenSmsTilOpprettingSammeFnr.fnr[0]
+        restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java)
+        sendSmsService.sendSmser()
+        restTemplate.postForEntity("$baseUrl/sms", HttpEntity(enAnnenSmsTilOpprettingSammeFnr, null), String::class.java)
+        sendSmsService.sendSmser()
+
+        val respons: ResponseEntity<List<SmsStatus>> = restTemplate.exchange(
+            "$baseUrl/sms/fnr/${fnr}",
+            HttpMethod.GET,
+            HttpEntity(null, null),
+            object : ParameterizedTypeReference<List<SmsStatus>>() {}
+        )
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(respons.body).isNotEmpty.hasSize(2)
+        val body = respons.body!!
+
+        assertThat(body[0].fnr).isEqualTo(fnr)
+        assertThat(body[0].id).isGreaterThan(0)
+        assertThat(body[0].opprettet).isCloseTo(now(), within(2, SECONDS))
+        assertThat(body[0].sendt).isCloseTo(now(), within(2, SECONDS))
+        assertThat(body[0].status).isEqualTo(Status.SENDT)
+        assertThat(body[0].navIdent).isEqualTo("X123456")
+
+        assertThat(body[1].fnr).isEqualTo(fnr)
+        assertThat(body[1].id).isGreaterThan(0).isNotEqualTo(body[0].id)
+        assertThat(body[1].opprettet).isCloseTo(now(), within(2, SECONDS))
+        assertThat(body[1].sendt).isCloseTo(now(), within(2, SECONDS))
+        assertThat(body[1].status).isEqualTo(Status.SENDT)
+        assertThat(body[1].navIdent).isEqualTo("X123456")
+    }
+
+    @Test
+    fun `Kall for å hente smser for en person skal returnere 200 ok med tom liste hvis ingen SMSer finnes for person`() {
+        val respons: ResponseEntity<List<SmsStatus>> = restTemplate.exchange(
+            "$baseUrl/sms/fnr${enSmsTilOppretting.fnr[0]}",
+            HttpMethod.GET,
+            HttpEntity(null, null),
+            object : ParameterizedTypeReference<List<SmsStatus>>() {}
+        )
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(respons.body!!).isEmpty()
+    }
+
     @AfterEach
     fun tearDown() {
         enSmsTilOppretting.fnr.forEach {
