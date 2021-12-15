@@ -8,5 +8,6 @@ data class SmsStatus(
     val opprettet: LocalDateTime,
     val sendt: LocalDateTime?,
     val status: Status,
-    val navIdent: String
+    val navIdent: String,
+    val kandidatlisteId: String
 )

@@ -101,6 +101,7 @@ class HentSmsStatuserTest {
         assertThat(body[0].sendt).isCloseTo(now(), within(2, SECONDS))
         assertThat(body[0].status).isEqualTo(Status.SENDT)
         assertThat(body[0].navIdent).isEqualTo("X123456")
+        assertThat(body[0].kandidatlisteId).isEqualTo("123456")
 
         assertThat(body[1].fnr).isEqualTo(fnr)
         assertThat(body[1].id).isGreaterThan(0).isNotEqualTo(body[0].id)
@@ -108,6 +109,7 @@ class HentSmsStatuserTest {
         assertThat(body[1].sendt).isCloseTo(now(), within(2, SECONDS))
         assertThat(body[1].status).isEqualTo(Status.SENDT)
         assertThat(body[1].navIdent).isEqualTo("X123456")
+        assertThat(body[1].kandidatlisteId).isEqualTo("555555")
     }
 
     @Test
