@@ -23,7 +23,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Run tests
-        run: mvn test
+        run: mvn verify
 
   deploy-to-dev:
     name: Deploy to dev
@@ -31,7 +31,7 @@ jobs:
     #########################
     ### DEVELOPERS: Insert your feature branch name below (in addition to master) if you want to deploy it to dev
     #########################
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/oppgradering-april-2021'
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/flytt-fra-namespace-default'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1

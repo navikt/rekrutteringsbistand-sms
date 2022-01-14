@@ -25,7 +25,7 @@ spec:
     paths:
       - kvPath: /serviceuser/data/dev/srv-rekbis-sms
         mountPath: /secret/serviceuser
-      - kvPath: /kv/preprod/fss/rekrutteringsbistand-sms/default
+      - kvPath: /kv/preprod/fss/rekrutteringsbistand-sms/toi
         mountPath: /var/run/secrets/nais.io/vault
   env:
     - name: SPRING_PROFILES_ACTIVE
