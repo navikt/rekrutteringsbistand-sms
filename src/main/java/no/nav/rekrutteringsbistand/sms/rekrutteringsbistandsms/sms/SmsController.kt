@@ -36,4 +36,10 @@ class SmsController(
         val smsStatuser = smsRepository.hentSmser(kandidatlisteId).map { it.tilSmsStatus() }
         return ResponseEntity.ok(smsStatuser)
     }
+
+    @GetMapping("/sms/fnr/{fnr}")
+    fun hentSmsStatuserForPerson(@PathVariable fnr: String): ResponseEntity<List<SmsStatus>> {
+        val smsStatuser = smsRepository.hentSmserForPerson(fnr).map { it.tilSmsStatus() }
+        return ResponseEntity.ok(smsStatuser)
+    }
 }

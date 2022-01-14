@@ -84,4 +84,8 @@ class SmsRepository(
     fun slettSms(fnr: String) {
         jdbcTemplate.update("DELETE FROM $TABELL WHERE $FNR = ?", fnr)
     }
+
+    fun hentSmserForPerson(fnr: String): List<Sms> {
+        return jdbcTemplate.query("SELECT * FROM $TABELL WHERE $FNR = ?", SmsMapper(), fnr)
+    }
 }

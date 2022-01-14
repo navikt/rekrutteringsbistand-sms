@@ -20,7 +20,9 @@ data class Sms (
                 fnr = this.fnr,
                 opprettet = this.opprettet,
                 sendt = this.sendt,
-                status = this.status
+                status = this.status,
+                navIdent = this.navident,
+                kandidatlisteId = this.kandidatlisteId
         )
     }
 }

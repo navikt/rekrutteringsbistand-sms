@@ -10,6 +10,12 @@ val enSmsTilOppretting = OpprettSms(
     kandidatlisteId = "123456"
 )
 
+val enAnnenSmsTilOpprettingSammeFnr = OpprettSms(
+    melding = "Til del 2!",
+    fnr = listOf("02080569664", "03012341295", "31129611815"),
+    kandidatlisteId = "555555"
+)
+
 val enSmsTilOpprettingMedUgyldigFnr = enSmsTilOppretting.copy(
     fnr = listOf("123", "feil")
 )

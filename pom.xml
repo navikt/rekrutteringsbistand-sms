@@ -14,8 +14,8 @@
     <name>rekrutteringsbistand-sms</name>
 
     <properties>
-        <java.version>14</java.version>
-        <kotlin.version>1.4.32</kotlin.version>
+        <java.version>17</java.version>
+        <kotlin.version>1.6.0</kotlin.version>
     </properties>
 
     <dependencies>
@@ -121,6 +121,20 @@
             <groupId>no.nav.security</groupId>
             <artifactId>token-validation-spring-test</artifactId>
             <version>1.3.4</version>
+            <scope>test</scope>
+            <!-- TODO: feiler med lombok 1.18.18. Vi kan ta bort exclusion -->
+            <!-- når det her brukes versjon 1.18.20 eller nyere -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
             <scope>test</scope>
         </dependency>
         <dependency>
