@@ -2,9 +2,9 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: rekrutteringsbistand-sms
-  namespace: default
+  namespace: toi
   labels:
-    team: arbeidsgiver
+    team: toi
 spec:
   image: {{version}}
   port: 8080
@@ -25,7 +25,7 @@ spec:
     paths:
       - kvPath: /serviceuser/data/prod/srv-rekbis-sms
         mountPath: /secret/serviceuser
-      - kvPath: /kv/prod/fss/rekrutteringsbistand-sms/default
+      - kvPath: /kv/prod/fss/rekrutteringsbistand-sms/toi
         mountPath: /var/run/secrets/nais.io/vault
   env:
     - name: SPRING_PROFILES_ACTIVE

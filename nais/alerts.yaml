@@ -1,10 +1,10 @@
 apiVersion: "nais.io/v1"
 kind: "Alert"
 metadata:
-  name: rekrutteringsbistand-sms-alert
-  namespace: arbeidsgiver
+  name: rekrutteringsbistand-sms
+  namespace: toi
   labels:
-    team: arbeidsgiver
+    team: toi
 spec:
   receivers:
     slack:
