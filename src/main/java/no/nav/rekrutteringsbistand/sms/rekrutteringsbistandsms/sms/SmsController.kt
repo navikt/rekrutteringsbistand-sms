@@ -13,7 +13,6 @@ class SmsController(
     private val smsValidator: SmsValidator,
     private val authUtils: AuthUtils
 ) {
-
     @PostMapping("/sms")
     fun sendSms(@RequestBody sms: OpprettSms): ResponseEntity<String> {
         val (ok, httpStatus, melding) = smsValidator.valider(sms)

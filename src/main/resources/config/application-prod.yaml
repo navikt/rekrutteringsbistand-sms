@@ -9,6 +9,10 @@ no.nav.security.jwt:
     accepted_audience: 9b4e07a3-4f4c-4bab-b866-87f62dff480d
     cookiename: isso-idtoken
     proxyurl: http://webproxy.nais:8088
+  issuer.azuread:
+    discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
+    accepted_audience: ${AZURE_APP_CLIENT_ID}
+    proxyurl: http://webproxy.nais:8088
 
 rekrutteringsbistand:
   database:
