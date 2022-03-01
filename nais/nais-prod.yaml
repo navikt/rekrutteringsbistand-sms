@@ -27,6 +27,17 @@ spec:
         mountPath: /secret/serviceuser
       - kvPath: /kv/prod/fss/rekrutteringsbistand-sms/toi
         mountPath: /var/run/secrets/nais.io/vault
+  azure:
+    application:
+      enabled: true
+      claims:
+        extra:
+          - NAVident
+  accessPolicy:
+    inbound:
+      rules:
+        - application: rekrutteringsbistand-container
+          cluster: dev-gcp
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: prod
