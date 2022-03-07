@@ -35,3 +35,14 @@ spec:
   prometheus:
     enabled: true
     path: /rekrutteringsbistand-sms/internal/actuator/prometheus
+  azure:
+    application:
+      enabled: true
+      claims:
+        extra:
+          - NAVident
+  accessPolicy:
+    inbound:
+      rules:
+        - application: rekrutteringsbistand-container
+          cluster: dev-gcp
