@@ -10,6 +10,7 @@ spec:
   port: 8080
   ingresses:
     - https://arbeidsgiver.nais.adeo.no/rekrutteringsbistand-sms/
+    - https://rekrutteringsbistand-sms.prod-fss-pub.nais.io/rekrutteringsbistand-sms/
   liveness:
     path: /rekrutteringsbistand-sms/internal/actuator/health
     initialDelay: 30
