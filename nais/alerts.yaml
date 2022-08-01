@@ -14,24 +14,17 @@ spec:
       expr: sum(up{app="rekrutteringsbistand-sms", job="kubernetes-pods"}) == 0
       for: 1s
       description: "rekrutteringsbistand-sms er nede"
-      action: "https://logs.adeo.no/goto/c35f1545a01fc97aa82e4cfe836f1683"
+      action: "https://logs.adeo.no/goto/65b57d50-1167-11ed-a503-d3f90a22c586"
 
     - alert: rekrutteringsbistand-sms
       expr: sum(increase(logd_messages_total{log_app="rekrutteringsbistand-sms", log_level="Error"}[10m])) > 0
       for: 10s
       description: "rekrutteringsbistand-sms har logget en feil"
-      action: "https://logs.adeo.no/goto/c35f1545a01fc97aa82e4cfe836f1683"
-
-    # Midlertidig for å verifisere at alerts trigges og gir melding i alerts-kanalen
-    - alert: rekrutteringsbistand-sms
-      expr: sum(increase(logd_messages_total{log_app="rekrutteringsbistand-sms", log_level="Warning"}[10m])) > 0
-      for: 10s
-      description: "rekrutteringsbistand-sms har logget en advarsel. Denne konfigurasjonen for alerts på warnings er midlertidig og kan fjernes når vi har fått verifisert at den dukker opp i Slack."
-      action: "https://logs.adeo.no/goto/c35f1545a01fc97aa82e4cfe836f1683"
+      action: "https://logs.adeo.no/goto/65b57d50-1167-11ed-a503-d3f90a22c586"
       
     - alert: rekrutteringsbistand-sms
       severity: warning
       expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-sms",log_level=~"Warning"}[5m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="rekrutteringsbistand-sms"}[5m]))) > 20
       for: 5m
       description: Økning i warnings
-      action: "https://logs.adeo.no/goto/c35f1545a01fc97aa82e4cfe836f1683"
+      action: "https://logs.adeo.no/goto/65b57d50-1167-11ed-a503-d3f90a22c586"
