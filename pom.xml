@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.6</version>
+        <version>2.7.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>no.nav.rekrutteringsbistand.sms</groupId>
@@ -15,7 +15,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.6.21</kotlin.version>
+        <kotlin.version>1.7.20</kotlin.version>
     </properties>
 
     <dependencies>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
-            <version>2.13.2</version>
+            <version>2.13.4</version>
         </dependency>
 
         <dependency>
@@ -49,29 +49,29 @@
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-core</artifactId>
-            <version>1.6.1</version>
+            <version>1.6.4</version>
         </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.1.212</version>
+            <version>2.1.214</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>8.5.9</version>
+            <version>9.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.3.4</version>
+            <version>42.5.0</version>
         </dependency>
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>vault-jdbc</artifactId>
-            <version>1.3.9</version>
+            <version>1.3.10</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -90,17 +90,18 @@
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-spring</artifactId>
-            <version>4.34.0</version>
+            <version>4.42.0</version>
         </dependency>
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-provider-jdbc-template</artifactId>
-            <version>4.34.0</version>
+            <version>4.42.0</version>
         </dependency>
 
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>1.9.5</version>
         </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
@@ -111,19 +112,19 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>7.1.1</version>
+            <version>7.2</version>
         </dependency>
 
         <!-- Dependencies relatert til login -->
         <dependency>
             <groupId>no.nav.security</groupId>
             <artifactId>token-validation-spring</artifactId>
-            <version>2.0.14</version>
+            <version>2.1.6</version>
         </dependency>
         <dependency>
             <groupId>no.nav.security</groupId>
             <artifactId>token-validation-spring-test</artifactId>
-            <version>2.0.14</version>
+            <version>2.1.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -135,13 +136,13 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>mockwebserver</artifactId>
-            <version>4.9.3</version>
+            <version>4.10.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.9.3</version>
+            <version>4.10.0</version>
             <scope>test</scope>
         </dependency>
         <!-- /Dependencies relatert til login -->
@@ -154,17 +155,17 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
-            <version>3.4.1</version>
+            <version>3.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-features-logging</artifactId>
-            <version>3.4.1</version>
+            <version>3.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-ws-security</artifactId>
-            <version>3.4.1</version>
+            <version>3.5.3</version>
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
