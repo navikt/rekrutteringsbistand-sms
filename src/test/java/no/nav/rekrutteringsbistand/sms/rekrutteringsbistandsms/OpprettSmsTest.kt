@@ -36,7 +36,6 @@ class OpprettSmsTest {
     @BeforeEach
     fun login() {
         restTemplate.getForObject("$baseUrl/veileder-token-cookie", String::class.java)
-        enSmsTilOppretting.fnr.plus(enSmsTilOpprettingSyntetiskFnr.fnr).forEach { repository.slettSms(it) }
     }
 
     @Test
@@ -55,6 +54,8 @@ class OpprettSmsTest {
             assertThat(sms.status).isEqualTo(Status.IKKE_SENDT)
             assertThat(sms.sendt).isNull()
         }
+
+            enSmsTilOppretting.fnr.forEach { repository.slettSms(it) }
     }
 
     @Test
@@ -71,6 +72,7 @@ class OpprettSmsTest {
             "$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java
         )
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
+        enSmsTilOppretting.fnr.forEach { repository.slettSms(it) }
     }
 
     @Test
@@ -80,6 +82,7 @@ class OpprettSmsTest {
             "$baseUrl/sms", HttpEntity(enSmsTilOpprettingSyntetiskFnr, null), String::class.java
         )
         assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
+        enSmsTilOpprettingSyntetiskFnr.fnr.forEach { repository.slettSms(it) }
     }
 
     @Test
@@ -89,6 +92,7 @@ class OpprettSmsTest {
             "$baseUrl/sms", HttpEntity(enSmsTilOpprettingSyntetiskFnr, null), String::class.java
         )
         assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        enSmsTilOpprettingSyntetiskFnr.fnr.forEach { repository.slettSms(it) }
     }
 
 
