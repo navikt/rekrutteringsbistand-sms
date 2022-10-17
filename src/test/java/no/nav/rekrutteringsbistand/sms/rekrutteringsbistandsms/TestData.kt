@@ -20,6 +20,10 @@ val enSmsTilOpprettingMedUgyldigFnr = enSmsTilOppretting.copy(
     fnr = listOf("123", "feil")
 )
 
+val enSmsTilOpprettingSyntetiskFnr = enSmsTilOppretting.copy(
+    fnr = listOf("25879099636")
+)
+
 val enSmsTilOpprettingMedForLangMelding = enSmsTilOppretting.copy(
     melding = "Hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei " +
             "Hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei hei "
