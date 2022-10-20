@@ -9,13 +9,11 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 @EnableConfigurationProperties
 @EnableJwtTokenValidation(ignore = ["org.springframework"])
-class RekrutteringsbistandSmsApplication {
+class RekrutteringsbistandSmsApplication
 
-    fun main(args: Array<String>) {
-        clusterconfig()
-        runApplication<RekrutteringsbistandSmsApplication>(*args)
-    }
-
+fun main(args: Array<String>) {
+    clusterconfig()
+    runApplication<RekrutteringsbistandSmsApplication>(*args)
 }
 
 fun clusterconfig(cluster: String? = System.getenv("NAIS_CLUSTER_NAME")) {
