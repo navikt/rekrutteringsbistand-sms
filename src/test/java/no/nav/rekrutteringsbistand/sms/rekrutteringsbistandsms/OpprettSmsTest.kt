@@ -1,6 +1,5 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms
 
-import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SendSmsService
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsRepository
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.Status
 import org.assertj.core.api.Assertions.assertThat
@@ -21,6 +20,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OpprettSmsTest {
+
+    init {
+        clusterconfig("lokaltest")
+    }
 
     @LocalServerPort
     private var port = 0
@@ -51,6 +54,8 @@ class OpprettSmsTest {
             assertThat(sms.status).isEqualTo(Status.IKKE_SENDT)
             assertThat(sms.sendt).isNull()
         }
+
+            enSmsTilOppretting.fnr.forEach { repository.slettSms(it) }
     }
 
     @Test
@@ -62,11 +67,39 @@ class OpprettSmsTest {
     }
 
     @Test
+    fun `POST til sms skal returnere 201 Created om det er et gyldig fødselsnummer`() {
+        val respons = restTemplate.postForEntity(
+            "$baseUrl/sms", HttpEntity(enSmsTilOppretting, null), String::class.java
+        )
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
+        enSmsTilOppretting.fnr.forEach { repository.slettSms(it) }
+    }
+
+    @Test
+    fun `POST til sms skal returnere 201 Created om det er et syntetisk fødselsnummer med test env`() {
+        clusterconfig("dev-gcp")
+        val respons = restTemplate.postForEntity(
+            "$baseUrl/sms", HttpEntity(enSmsTilOpprettingSyntetiskFnr, null), String::class.java
+        )
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.CREATED)
+        enSmsTilOpprettingSyntetiskFnr.fnr.forEach { repository.slettSms(it) }
+    }
+
+    @Test
+    fun `POST til sms skal returnere 400 bad request  om det er et syntetisk fødselsnummer med prod env`() {
+        clusterconfig("prod-fss")
+        val respons = restTemplate.postForEntity(
+            "$baseUrl/sms", HttpEntity(enSmsTilOpprettingSyntetiskFnr, null), String::class.java
+        )
+        assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        enSmsTilOpprettingSyntetiskFnr.fnr.forEach { repository.slettSms(it) }
+    }
+
+
+    @Test
     fun `POST til sms skal returnere 400 bad request hvis ugyldig fnr`() {
         val respons = restTemplate.postForEntity(
-            "$baseUrl/sms",
-            HttpEntity(enSmsTilOpprettingMedUgyldigFnr, null),
-            String::class.java
+            "$baseUrl/sms", HttpEntity(enSmsTilOpprettingMedUgyldigFnr, null), String::class.java
         )
         assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
@@ -74,9 +107,7 @@ class OpprettSmsTest {
     @Test
     fun `POST til sms skal returnere 400 bad request hvis meldingen er for lang`() {
         val respons = restTemplate.postForEntity(
-            "$baseUrl/sms",
-            HttpEntity(enSmsTilOpprettingMedForLangMelding, null),
-            String::class.java
+            "$baseUrl/sms", HttpEntity(enSmsTilOpprettingMedForLangMelding, null), String::class.java
         )
         assertThat(respons.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
