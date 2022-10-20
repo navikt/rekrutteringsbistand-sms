@@ -9,14 +9,16 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 @EnableConfigurationProperties
 @EnableJwtTokenValidation(ignore = ["org.springframework"])
-class RekrutteringsbistandSmsApplication(cluster: String? = System.getenv("NAIS_CLUSTER_NAME")) {
-
-    init {
-        val erProd = "prod-fss" == cluster
-        FodselsnummerValidator.ALLOW_SYNTHETIC_NUMBERS = !erProd
-    }
+class RekrutteringsbistandSmsApplication {
 
     fun main(args: Array<String>) {
+        clusterconfig()
         runApplication<RekrutteringsbistandSmsApplication>(*args)
     }
+
+}
+
+fun clusterconfig(cluster: String? = System.getenv("NAIS_CLUSTER_NAME")) {
+    val erProd = "prod-fss" == cluster
+    FodselsnummerValidator.ALLOW_SYNTHETIC_NUMBERS = !erProd
 }

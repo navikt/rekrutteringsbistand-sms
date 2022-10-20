@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 class OpprettSmsTest {
 
     init {
-        RekrutteringsbistandSmsApplication("lokaltest")
+        clusterconfig("lokaltest")
     }
 
     @LocalServerPort
@@ -77,7 +77,7 @@ class OpprettSmsTest {
 
     @Test
     fun `POST til sms skal returnere 201 Created om det er et syntetisk fødselsnummer med test env`() {
-        RekrutteringsbistandSmsApplication("dev-gcp")
+        clusterconfig("dev-gcp")
         val respons = restTemplate.postForEntity(
             "$baseUrl/sms", HttpEntity(enSmsTilOpprettingSyntetiskFnr, null), String::class.java
         )
@@ -87,7 +87,7 @@ class OpprettSmsTest {
 
     @Test
     fun `POST til sms skal returnere 400 bad request  om det er et syntetisk fødselsnummer med prod env`() {
-        RekrutteringsbistandSmsApplication("prod-fss")
+        clusterconfig("prod-fss")
         val respons = restTemplate.postForEntity(
             "$baseUrl/sms", HttpEntity(enSmsTilOpprettingSyntetiskFnr, null), String::class.java
         )
