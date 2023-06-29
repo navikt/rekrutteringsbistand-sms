@@ -43,6 +43,8 @@ spec:
       rules:
         - application: rekrutteringsbistand-container
           cluster: prod-gcp
+        - application: rekrutteringsbistand
+          cluster: prod-gcp
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: prod
