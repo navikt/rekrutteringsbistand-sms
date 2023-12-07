@@ -11,7 +11,7 @@ spec:
       rules:
         - alert: rekrutteringsbistand-sms
           expr: kube_deployment_status_replicas_available{deployment="rekrutteringsbistand-sms"} == 0
-          for: 1s
+          for: 10s
           annotations:
             summary: Appen er nede
             action: "https://logs.adeo.no/app/r/s/l4gq0"
