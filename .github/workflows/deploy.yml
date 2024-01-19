@@ -31,7 +31,7 @@ jobs:
     name: Deploy to dev
     needs: test
     outputs:
-      image: steps.docker-build-push.outputs.image
+      image: ${{ steps.docker-build-push.outputs.image }}
     #########################
     ### DEVELOPERS: Insert your feature branch name below (in addition to master) if you want to deploy it to dev
     #########################
@@ -76,7 +76,7 @@ jobs:
         env:
           CLUSTER: prod-fss
           RESOURCE: nais/nais-prod.yaml
-          VAR: IMAGE=${{ steps.docker-build-push.outputs.image }},version=${{ steps.docker-build-push.outputs.image }}
+          VAR: IMAGE=${{ needs.deploy-to-dev.outputs.image }},version=${{ needs.deploy-to-dev.outputs.image }}
 
 
   deploy-alerts:
