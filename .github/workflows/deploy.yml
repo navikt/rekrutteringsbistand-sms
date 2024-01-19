@@ -5,9 +5,6 @@ on: [ push ]
 permissions:
   contents: read
   id-token: write
-  
-env:
-  IMAGE: ghcr.io/${{ github.repository }}/rekrutteringsbistand-sms-tjeneste:${{ github.sha }}
 
 jobs:
   test:
@@ -33,6 +30,8 @@ jobs:
   deploy-to-dev:
     name: Deploy to dev
     needs: test
+    outputs:
+      image: steps.docker-build-push.outputs.image
     #########################
     ### DEVELOPERS: Insert your feature branch name below (in addition to master) if you want to deploy it to dev
     #########################
@@ -52,20 +51,19 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Build jar with Maven
         run: ./mvnw package -DskipTests
-      - name: Build and publish Docker image
+
+      - uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: toi
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} 
+          
+      - uses: nais/deploy/actions/deploy@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker build --tag ${IMAGE} .
-          echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${GITHUB_REPOSITORY} --password-stdin
-          echo ${IMAGE}
-          docker push ${IMAGE}
-      - uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
-          VAR: version=${{ env.IMAGE }}
           RESOURCE: nais/nais-dev.yaml
+          VAR: IMAGE=${{ steps.docker-build-push.outputs.image }},version=${{ steps.docker-build-push.outputs.image }}
 
   deploy-to-prod:
     name: Deploy to prod
@@ -74,12 +72,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: nais/deploy/actions/deploy@v1
+      - uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
-          VAR: version=${{ env.IMAGE }}
           RESOURCE: nais/nais-prod.yaml
+          VAR: IMAGE=${{ steps.docker-build-push.outputs.image }},version=${{ steps.docker-build-push.outputs.image }}
+
 
   deploy-alerts:
     name: Deploy alerts to prod
@@ -87,8 +85,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: nais/deploy/actions/deploy@v1
+      - uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
           RESOURCE: nais/alerts.yaml
