@@ -28,7 +28,7 @@ class HentSmsStatuserTest {
 
     @LocalServerPort
     private var port = 0
-    val baseUrl by lazy { "http://localhost:$port/rekrutteringsbistand-sms-pg15" }
+    val baseUrl by lazy { "http://localhost:$port/rekrutteringsbistand-sms" }
     val restTemplate = TestRestTemplate(TestRestTemplate.HttpClientOption.ENABLE_COOKIES)
 
     @Autowired
