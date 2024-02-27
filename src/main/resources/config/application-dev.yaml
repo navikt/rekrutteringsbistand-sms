@@ -16,7 +16,7 @@ no.nav.security.jwt:
 
 rekrutteringsbistand:
   database:
-    url: jdbc:postgresql://b27dbvl013.preprod.local:5432/rekrutteringsbistand-sms
+    url: jdbc:postgresql://b27dbvl033.preprod.local:5432/rekrutteringsbistand-sms-pg15
     vault-sti: postgresql/preprod-fss
   altinn-varsel:
     uri: https://pep-gw-q1.oera-q.local:9443/ekstern/altinn/notificationagencyexternalbasic/v1

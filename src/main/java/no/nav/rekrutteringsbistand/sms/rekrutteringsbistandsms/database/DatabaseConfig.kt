@@ -16,7 +16,7 @@ import javax.sql.DataSource
 class DatabaseConfig {
 
     companion object {
-        private const val DATABASE_NAVN = "rekrutteringsbistand-sms"
+        private const val DATABASE_NAVN = "rekrutteringsbistand-sms-pg15"
     }
 
     @Value("\${rekrutteringsbistand.database.url}")

@@ -27,7 +27,7 @@ class OpprettSmsTest {
 
     @LocalServerPort
     private var port = 0
-    val baseUrl by lazy { "http://localhost:$port/rekrutteringsbistand-sms" }
+    val baseUrl by lazy { "http://localhost:$port/rekrutteringsbistand-sms-pg15" }
     val restTemplate = TestRestTemplate(ENABLE_COOKIES)
 
     @Autowired
