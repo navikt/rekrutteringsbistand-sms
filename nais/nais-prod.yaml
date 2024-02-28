@@ -19,8 +19,8 @@ spec:
     initialDelay: 30
   preStopHookPath: /rekrutteringsbistand-sms/internal/preStopHook
   replicas:
-    min: 1
-    max: 1
+    min: 0
+    max: 0
   vault:
     enabled: true
     paths:
