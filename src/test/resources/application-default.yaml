@@ -21,3 +21,9 @@ no.nav.security.jwt:
 rekrutteringsbistand:
   altinn-varsel:
     uri: http://localhost:8091
+
+azure.openid.config.token.endpoint: "endpoint"
+azure.app.client.id: "id"
+azure.app.client.secret: "secret"
+kandidat.api.scope: "scope"
+kandidat.api.url: "kandidatapiurl"

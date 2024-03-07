@@ -11,3 +11,12 @@ data class SmsStatus(
     val navIdent: String,
     val kandidatlisteId: String
 )
+
+data class SmsStatusV2(
+    val id: String,
+    val fnr: String,
+    val opprettet: LocalDateTime,
+    val status: StatusV2,
+    val navIdent: String,
+    val stillingId: String
+)

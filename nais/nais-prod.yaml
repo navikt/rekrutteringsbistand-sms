@@ -51,6 +51,8 @@ spec:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: prod
+    - name: KANDIDAT_API_SCOPE
+      value: api://prod-fss.toi.rekrutteringsbistand-kandidat-api/.default
   webproxy: true
   prometheus:
     enabled: true
