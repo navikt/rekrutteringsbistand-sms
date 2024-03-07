@@ -13,7 +13,7 @@ class SmsController(
     private val smsValidator: SmsValidator,
     private val authUtils: AuthUtils
 ) {
-    @PostMapping("/sms")
+    @PostMapping("/sms", "/sms/sms")
     fun sendSms(@RequestBody sms: OpprettSms): ResponseEntity<String> {
         val (ok, httpStatus, melding) = smsValidator.valider(sms)
         if (ok) {
@@ -30,13 +30,13 @@ class SmsController(
             .body(melding)
     }
 
-    @GetMapping("/sms/{kandidatlisteId}")
+    @GetMapping("/sms/{kandidatlisteId}", "/sms/sms/{kandidatlisteId}")
     fun hentSmsStatuser(@PathVariable kandidatlisteId: String): ResponseEntity<List<SmsStatus>> {
         val smsStatuser = smsRepository.hentSmser(kandidatlisteId).map { it.tilSmsStatus() }
         return ResponseEntity.ok(smsStatuser)
     }
 
-    @GetMapping("/sms/fnr/{fnr}")
+    @GetMapping("/sms/fnr/{fnr}", "/sms/sms/fnr/{fnr}")
     fun hentSmsStatuserForPerson(@PathVariable fnr: String): ResponseEntity<List<SmsStatus>> {
         val smsStatuser = smsRepository.hentSmserForPerson(fnr).map { it.tilSmsStatus() }
         return ResponseEntity.ok(smsStatuser)
