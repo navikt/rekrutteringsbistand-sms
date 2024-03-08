@@ -45,6 +45,9 @@ spec:
           cluster: dev-gcp
         - application: rekrutteringsbistand
           cluster: dev-gcp
+    outbound:
+      rules:
+        - application: rekrutteringsbistand-kandidat-api
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: dev

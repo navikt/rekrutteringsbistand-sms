@@ -45,6 +45,9 @@ spec:
           cluster: prod-gcp
         - application: rekrutteringsbistand
           cluster: prod-gcp
+    outbound:
+      rules:
+        - application: rekrutteringsbistand-kandidat-api
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: prod
