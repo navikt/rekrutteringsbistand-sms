@@ -1,6 +1,7 @@
 package no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms
 
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
@@ -25,6 +26,7 @@ class SmsRepository(
         const val STATUS = "status"
         const val GJENVÆRENDE_FORSØK = "gjenvarende_forsok"
         const val SIST_FEILET = "sist_feilet"
+        const val STILLING_ID = "stilling_id"
     }
 
     private val smsInsert = simpleJdbcInsert
@@ -69,6 +71,10 @@ class SmsRepository(
         jdbcTemplate.update("UPDATE $TABELL SET $STATUS = ? WHERE $ID = ?", status.name, id)
     }
 
+    fun settStillingId(kandidatlisteId: String, stillingId: String) {
+        jdbcTemplate.update("UPDATE $TABELL SET $STILLING_ID = ? WHERE $KANDIDATLISTE_ID = ?", stillingId, kandidatlisteId)
+    }
+
     // TODO Legg til test som bruker denne metoden
     fun settFeil(id: Int, status: Status, gjenværendeForsøk: Int, sistFeilet: LocalDateTime) {
         jdbcTemplate.update(
@@ -87,5 +93,21 @@ class SmsRepository(
 
     fun hentSmserForPerson(fnr: String): List<Sms> {
         return jdbcTemplate.query("SELECT * FROM $TABELL WHERE $FNR = ?", SmsMapper(), fnr)
+    }
+
+    fun finnKandidatlisteId(stillingId: String): String? {
+        return try {
+            jdbcTemplate.queryForObject("SELECT kandidatliste_id FROM $TABELL WHERE $STILLING_ID = ? LIMIT 1",  String::class.java, stillingId)
+        } catch (e: EmptyResultDataAccessException) {
+            null
+        }
+    }
+
+    fun finnStillingId(kandidatlisteId: String): String? {
+        return try {
+            jdbcTemplate.queryForObject("SELECT stilling_id FROM $TABELL WHERE $KANDIDATLISTE_ID = ? LIMIT 1",  String::class.java, kandidatlisteId)
+        } catch (e: EmptyResultDataAccessException) {
+            null
+        }
     }
 }

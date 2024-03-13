@@ -15,6 +15,7 @@ class SmsMapper : RowMapper<Sms> {
                     navident = rs.getString(SmsRepository.NAVIDENT),
                     status = Status.valueOf(rs.getString(SmsRepository.STATUS)),
                     gjenværendeForsøk = rs.getInt(SmsRepository.GJENVÆRENDE_FORSØK),
-                    sistFeilet = rs.getTimestamp(SmsRepository.SIST_FEILET)?.toLocalDateTime()
+                    sistFeilet = rs.getTimestamp(SmsRepository.SIST_FEILET)?.toLocalDateTime(),
+                    stillingId = rs.getString(SmsRepository.STILLING_ID),
             )
 }

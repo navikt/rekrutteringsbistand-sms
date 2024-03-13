@@ -12,7 +12,8 @@ data class Sms (
         val navident: String,
         val status: Status,
         val gjenværendeForsøk: Int,
-        val sistFeilet: LocalDateTime?
+        val sistFeilet: LocalDateTime?,
+        val stillingId: String?,
 ) {
     fun tilSmsStatus(): SmsStatus {
         return SmsStatus(
@@ -35,4 +36,23 @@ data class OpprettSms (
 
 enum class Status {
     SENDT, UNDER_UTSENDING, IKKE_SENDT, FEIL
+}
+
+
+enum class Mal(val tekst: String) {
+    @Suppress("unused") // deserialisert
+    VURDERT_SOM_AKTUELL("Hei, vi har vurdert at kompetansen din kan passe til denne stillingen, hilsen NAV"),
+    @Suppress("unused") // deserialisert
+    PASSENDE_STILLING("Hei! Vi har funnet en stilling som kan passe deg. Interessert? Søk via lenka i annonsen. Hilsen NAV"),
+    @Suppress("unused") // deserialisert
+    PASSENDE_JOBBARRANGEMENT("Hei, vi har et jobbarrangement som kan passe for deg, hilsen NAV. Se mer info:"),
+}
+
+data class OpprettSmsV2 (
+    val mal: Mal,
+    val fnr: List<String>,
+)
+
+enum class StatusV2 {
+    UNDER_UTSENDING, SENDT, FEIL
 }

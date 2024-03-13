@@ -9,12 +9,11 @@ const val MAKS_LENGDE = 160
 data class ValideringsResultat(
         val ok: Boolean,
         val httpStatus: HttpStatus,
-        val melding: String
+        val melding: String,
 )
 
 @Component
 class SmsValidator(private val smsRepository: SmsRepository) {
-
     fun valider(sms: OpprettSms): ValideringsResultat {
         if (sms.fnr.isEmpty()) {
             return ValideringsResultat(
