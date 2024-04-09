@@ -6,6 +6,7 @@ import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.sms.SmsRepository
 import no.nav.rekrutteringsbistand.sms.rekrutteringsbistandsms.utils.log
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import java.util.concurrent.atomic.AtomicBoolean
 
 @Component
 class BackfillScheduler(
@@ -13,6 +14,8 @@ class BackfillScheduler(
     private val kandidatvarselClient: KandidatvarselClient,
     private val kandidatlisteClient: KandidatlisteClient,
 ) {
+    private val shutdownInitiated = AtomicBoolean(false)
+
     companion object {
         const val HVERT_ANDRE_MINUTT = "0 */2 * * * *"
         const val HVERT_TIENDE_SEKUND = "*/10 * * * * *"
@@ -21,6 +24,8 @@ class BackfillScheduler(
 
     @Scheduled(cron = HVERT_ANDRE_SEKUND)
     fun berikStillingId() {
+        if (shutdownInitiated.get()) return
+
         val sms = smsRepository.hentSmsUtenStillingId()
         if (sms != null) {
             log.info("BakcfillScheduler.berikStillingId: fant sms uten stillingId (kandidatlisteid=${sms.kandidatlisteId})")
@@ -43,6 +48,8 @@ class BackfillScheduler(
 
     @Scheduled(cron = HVERT_ANDRE_MINUTT)
     fun backfillDirtySmser() {
+        if (shutdownInitiated.get()) return
+
         val smser = smsRepository.hentDirtySmser(1000)
         log.info("BackfillScheduler.backfillDirtySmser: hentet ${smser.size} dirty smser")
         if (kandidatvarselClient.backfill(smser)) {
@@ -50,7 +57,11 @@ class BackfillScheduler(
             smsRepository.markClean(smser)
             log.info("BackfillScheduler.backfillDirtySmser: markerte ${smser.size} smser som clean")
         } else {
-              log.info("backfillDirtySmser: backfill feilet")
+            log.info("backfillDirtySmser: backfill feilet")
         }
+    }
+
+    fun stop() {
+        shutdownInitiated.set(true)
     }
 }

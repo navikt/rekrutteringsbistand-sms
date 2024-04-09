@@ -11,7 +11,10 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 
 @RestController
-class PreStopController(private val sendSmsScheduler: SendSmsScheduler) {
+class PreStopController(
+    private val sendSmsScheduler: SendSmsScheduler,
+    private val backfillScheduler: BackfillScheduler,
+) {
 
     @ExperimentalTime
     @Unprotected
@@ -19,6 +22,7 @@ class PreStopController(private val sendSmsScheduler: SendSmsScheduler) {
     fun preStophook(): ResponseEntity<Unit> {
         log.info("Applikasjonen har fått beskjed om å stoppe, stopper skedulert SMS-utsending")
         sendSmsScheduler.stopSkedulertSmsutsending()
+        backfillScheduler.stop()
         runBlocking { delay(30.seconds) }
         return ResponseEntity.ok().build()
     }
