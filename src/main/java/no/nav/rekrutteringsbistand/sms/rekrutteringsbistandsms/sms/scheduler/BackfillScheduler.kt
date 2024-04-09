@@ -23,9 +23,15 @@ class BackfillScheduler(
         val sms = smsRepository.hentSmsUtenStillingId()
         if (sms != null) {
             log.info("BakcfillScheduler.berikStillingId: fant sms uten stillingId (kandidatlisteid=${sms.kandidatlisteId})")
+            val stillingId = try {
+                kandidatlisteClient.hentStillingId(sms.kandidatlisteId)
+            } catch (e: Exception) {
+                log.info("hentStillingId feilet med exception {}", e::class.qualifiedName, e)
+                return
+            }
             smsRepository.settStillingId(
                 kandidatlisteId = sms.kandidatlisteId,
-                stillingId = kandidatlisteClient.hentStillingId(sms.kandidatlisteId)
+                stillingId = stillingId
             )
             log.info("BakcfillScheduler.berikStillingId: vellykket for kandidatlisteid=${sms.kandidatlisteId}")
         } else {
