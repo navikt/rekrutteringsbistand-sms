@@ -13,7 +13,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service
 import org.springframework.util.MultiValueMapAdapter
 import org.springframework.web.client.postForEntity
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Service
@@ -84,7 +83,11 @@ class KandidatvarselClient(
                     "client_id" to clientId,
                     "client_secret" to clientSecret,
                     "grant_type" to "client_credentials",
-                    "scope" to "api://${System.getenv("NAIS_CLUSTER_NAME")}.toi.rekrutteringsbistand-kandidatvarsel-api/.default"
+                    "scope" to
+                            if (System.getenv("NAIS_CLUSTER_NAME") == "prod-fss")
+                                "api://prod-gcp.toi.rekrutteringsbistand-kandidatvarsel-api/.default"
+                            else
+                                "api://dev-gcp.toi.rekrutteringsbistand-kandidatvarsel-api/.default",
                 ).mapValues { (_, v) -> listOf(v) }),
                 HttpHeaders().apply {
                     contentType = APPLICATION_FORM_URLENCODED
