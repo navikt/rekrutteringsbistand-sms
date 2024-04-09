@@ -16,9 +16,10 @@ class BackfillScheduler(
     companion object {
         const val HVERT_ANDRE_MINUTT = "0 */2 * * * *"
         const val HVERT_TIENDE_SEKUND = "*/10 * * * * *"
+        const val HVERT_ANDRE_SEKUND = "*/2 * * * * *"
     }
 
-    @Scheduled(cron = HVERT_TIENDE_SEKUND)
+    @Scheduled(cron = HVERT_ANDRE_SEKUND)
     fun berikStillingId() {
         val sms = smsRepository.hentSmsUtenStillingId()
         if (sms != null) {
