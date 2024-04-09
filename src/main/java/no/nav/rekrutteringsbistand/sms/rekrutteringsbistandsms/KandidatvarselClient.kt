@@ -27,6 +27,12 @@ class KandidatvarselClient(
         log.info("KandidatvarselClient: tokenEndpoint=$tokenEndpoint, clientId=$clientId")
     }
 
+    private val backfillUrl =
+        if (System.getenv("NAIS_CLUSTER_NAME") == "prod-gcp")
+            "https://rekrutteringsbistand-kandidatvarsel-api.intern.nav.no/api/backfill"
+        else
+            "https://rekrutteringsbistand-kandidatvarsel-api.intern.dev.nav.no/api/backfill"
+
     private val restTemplate = restTemplateBuilder
         .additionalMessageConverters(
             MappingJackson2HttpMessageConverter().apply {
@@ -63,7 +69,7 @@ class KandidatvarselClient(
         }
         val request = HttpEntity<List<BackfillRequest>>(backfillSmser, headers)
         val response = restTemplate.postForEntity<String>(
-            "http://rekrutteringsbistand-kandidatvarsel-api/api/backfill",
+            backfillUrl,
             request,
         )
         return response.statusCode.is2xxSuccessful

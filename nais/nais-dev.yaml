@@ -49,6 +49,8 @@ spec:
       rules:
         - application: rekrutteringsbistand-kandidat-api
         - application: rekrutteringsbistand-kandidatvarsel-api
+      external:
+        - host: rekrutteringsbistand-kandidatvarsel-api.intern.dev.nav.no
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: dev

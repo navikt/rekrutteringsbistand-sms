@@ -41,16 +41,16 @@ class BackfillScheduler(
         }
     }
 
-//    @Scheduled(cron = HVERT_ANDRE_MINUTT)
-//    fun backfillDirtySmser() {
-//        val smser = smsRepository.hentDirtySmser(1000)
-//        log.info("BackfillScheduler.backfillDirtySmser: hentet ${smser.size} dirty smser")
-//        if (kandidatvarselClient.backfill(smser)) {
-//            log.info("BackfillScheduler.backfillDirtySmser: back-fillet ${smser.size} dirty smser")
-//            smsRepository.markClean(smser)
-//            log.info("BackfillScheduler.backfillDirtySmser: markerte ${smser.size} smser som clean")
-//        } else {
-//              log.info("BACKFILL: backfillDirtySmser: backfill feilet")
-//        }
-//    }
+    @Scheduled(cron = HVERT_ANDRE_MINUTT)
+    fun backfillDirtySmser() {
+        val smser = smsRepository.hentDirtySmser(1000)
+        log.info("BackfillScheduler.backfillDirtySmser: hentet ${smser.size} dirty smser")
+        if (kandidatvarselClient.backfill(smser)) {
+            log.info("BackfillScheduler.backfillDirtySmser: back-fillet ${smser.size} dirty smser")
+            smsRepository.markClean(smser)
+            log.info("BackfillScheduler.backfillDirtySmser: markerte ${smser.size} smser som clean")
+        } else {
+              log.info("backfillDirtySmser: backfill feilet")
+        }
+    }
 }
