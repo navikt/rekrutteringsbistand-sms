@@ -141,6 +141,6 @@ class SmsRepository(
             UPDATE $TABELL
             SET $STILLING_ID_MISSING = true
             WHERE $KANDIDATLISTE_ID = ?
-        """)
+        """, kandidatlisteId)
     }
 }
