@@ -22,12 +22,14 @@ class BackfillScheduler(
     fun berikStillingId() {
         val sms = smsRepository.hentSmsUtenStillingId()
         if (sms != null) {
-            log.info("BakcfillScheduler.berikStillingId: fant sms uten stillingId")
+            log.info("BakcfillScheduler.berikStillingId: fant sms uten stillingId (kandidatlisteid=${sms.kandidatlisteId})")
             smsRepository.settStillingId(
                 kandidatlisteId = sms.kandidatlisteId,
                 stillingId = kandidatlisteClient.hentStillingId(sms.kandidatlisteId)
             )
-            log.info("BakcfillScheduler.berikStillingId: beriket sms")
+            log.info("BakcfillScheduler.berikStillingId: vellykket for kandidatlisteid=${sms.kandidatlisteId}")
+        } else {
+            log.info("BakcfillScheduler.berikStillingId: fant ingen sms uten stillingId")
         }
     }
 
