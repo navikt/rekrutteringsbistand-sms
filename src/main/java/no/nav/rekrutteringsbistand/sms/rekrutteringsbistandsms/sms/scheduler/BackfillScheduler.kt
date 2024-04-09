@@ -28,6 +28,7 @@ class BackfillScheduler(
                 kandidatlisteClient.hentStillingId(sms.kandidatlisteId)
             } catch (e: Exception) {
                 log.info("hentStillingId feilet med exception {}", e::class.qualifiedName, e)
+                smsRepository.markerStillingsIdSomBorte(sms.kandidatlisteId)
                 return
             }
             smsRepository.settStillingId(

@@ -28,6 +28,7 @@ class SmsRepository(
         const val GJENVÆRENDE_FORSØK = "gjenvarende_forsok"
         const val SIST_FEILET = "sist_feilet"
         const val STILLING_ID = "stilling_id"
+        const val STILLING_ID_MISSING = "stilling_id_missing"
         const val DIRTY = "dirty"
     }
 
@@ -129,9 +130,17 @@ class SmsRepository(
 
     fun hentSmsUtenStillingId(): Sms? {
         return try {
-            jdbcTemplate.queryForObject("SELECT * FROM $TABELL WHERE $STILLING_ID IS NULL LIMIT 1", SmsMapper())
+            jdbcTemplate.queryForObject("SELECT * FROM $TABELL WHERE $STILLING_ID IS NULL AND $STILLING_ID_MISSING <> true LIMIT 1", SmsMapper())
         } catch (e: EmptyResultDataAccessException) {
             null
         }
+    }
+
+    fun markerStillingsIdSomBorte(kandidatlisteId: String) {
+        jdbcTemplate.update("""
+            UPDATE $TABELL
+            SET $STILLING_ID_MISSING = true
+            WHERE $KANDIDATLISTE_ID = ?
+        """)
     }
 }
