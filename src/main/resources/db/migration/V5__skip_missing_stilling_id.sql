@@ -1,0 +1,1 @@
+ALTER TABLE sms ADD stilling_id_missing BOOLEAN DEFAULT FALSE;
