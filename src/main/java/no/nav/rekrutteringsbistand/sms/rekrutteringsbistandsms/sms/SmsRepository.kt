@@ -7,12 +7,14 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
+import javax.sql.DataSource
 
 
 @Repository
 class SmsRepository(
         private val jdbcTemplate: JdbcTemplate,
-        private val simpleJdbcInsert: SimpleJdbcInsert
+        private val simpleJdbcInsert: SimpleJdbcInsert,
+        private val dataSource: DataSource,
 ) {
 
     companion object {
@@ -119,13 +121,15 @@ class SmsRepository(
     }
 
     fun markClean(smser: List<Sms>) {
-        jdbcTemplate.update("""
+        dataSource.connection.use { conn ->
+            conn.prepareStatement("""
             UPDATE $TABELL
             SET $DIRTY = false
-            WHERE $ID IN (:ids)
-        """, MapSqlParameterSource().apply {
-            addValue("ids", smser.map { it.id })
-        })
+            WHERE $ID IN (?::int[])
+        """).use { stmt ->
+                stmt.setArray(1, conn.createArrayOf("int", smser.map { it.id }.toTypedArray()))
+            }
+        }
     }
 
     fun hentSmsUtenStillingId(): Sms? {
