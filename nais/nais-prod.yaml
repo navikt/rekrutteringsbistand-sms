@@ -49,6 +49,8 @@ spec:
       rules:
         - application: rekrutteringsbistand-kandidat-api
         - application: rekrutteringsbistand-kandidatvarsel-api
+          namespace: toi
+          cluster: prod-gcp
       external:
         - host: rekrutteringsbistand-kandidatvarsel-api.intern.nav.no
   env:
