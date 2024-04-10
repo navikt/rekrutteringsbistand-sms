@@ -46,7 +46,7 @@ class BackfillScheduler(
         }
     }
 
-    @Scheduled(cron = HVERT_ANDRE_MINUTT)
+//    @Scheduled(cron = HVERT_ANDRE_MINUTT)
     fun backfillDirtySmser() {
         if (shutdownInitiated.get()) return
 
