@@ -27,7 +27,7 @@ class KandidatvarselClient(
     }
 
     private val backfillUrl =
-        if (System.getenv("NAIS_CLUSTER_NAME") == "prod-gcp")
+        if (System.getenv("NAIS_CLUSTER_NAME") == "prod-fss")
             "https://rekrutteringsbistand-kandidatvarsel-api.intern.nav.no/api/backfill"
         else
             "https://rekrutteringsbistand-kandidatvarsel-api.intern.dev.nav.no/api/backfill"
