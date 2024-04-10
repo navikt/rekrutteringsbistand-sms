@@ -67,11 +67,16 @@ class KandidatvarselClient(
             )
         }
         val request = HttpEntity<List<BackfillRequest>>(backfillSmser, headers)
-        val response = restTemplate.postForEntity<String>(
-            backfillUrl,
-            request,
-        )
-        return response.statusCode.is2xxSuccessful
+        return try {
+            val response = restTemplate.postForEntity<String>(
+                backfillUrl,
+                request,
+            )
+            return response.statusCode.is2xxSuccessful
+        } catch (e: Exception) {
+            log.info("backfil feilet med exception {}", e::class.qualifiedName, e)
+            false
+        }
     }
 
     private fun authToken(): String {
