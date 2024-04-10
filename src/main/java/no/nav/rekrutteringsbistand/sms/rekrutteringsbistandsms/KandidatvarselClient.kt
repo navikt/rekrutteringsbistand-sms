@@ -74,7 +74,7 @@ class KandidatvarselClient(
             )
             return response.statusCode.is2xxSuccessful
         } catch (e: Exception) {
-            log.info("backfil feilet med exception {}", e::class.qualifiedName, e)
+            log.info("kallet '{}' feilet med exception {}", backfillUrl, e::class.qualifiedName, e)
             false
         }
     }
