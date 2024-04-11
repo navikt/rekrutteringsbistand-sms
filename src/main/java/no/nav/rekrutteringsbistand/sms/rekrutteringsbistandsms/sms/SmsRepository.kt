@@ -63,6 +63,10 @@ class SmsRepository(
         return jdbcTemplate.query("SELECT * FROM $TABELL WHERE ($DIRTY = true OR $DIRTY is null) AND $STILLING_ID is not null LIMIT $limit", SmsMapper())
     }
 
+    fun hentDirtySmser2(limit: Int): List<Sms> {
+        return jdbcTemplate.query("SELECT * FROM $TABELL WHERE ($DIRTY = true OR $DIRTY is null) AND $STILLING_ID_MISSING = true LIMIT $limit", SmsMapper())
+    }
+
     fun smsForFnrPåKandidatlisteAlleredeLagret(fnr: String, kandidatlisteId: String): Boolean {
         return jdbcTemplate.queryForObject(
                 "SELECT EXISTS (SELECT 1 FROM $TABELL WHERE $FNR = ? AND $KANDIDATLISTE_ID = ?)",
