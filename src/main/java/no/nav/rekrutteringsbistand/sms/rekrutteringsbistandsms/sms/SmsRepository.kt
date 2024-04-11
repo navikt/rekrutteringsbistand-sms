@@ -125,7 +125,7 @@ class SmsRepository(
             conn.prepareStatement("""
             UPDATE $TABELL
             SET $DIRTY = false
-            WHERE $ID = ANY (?::int[])
+            WHERE $ID = ANY (?)
         """).use { stmt ->
                 stmt.setArray(1, conn.createArrayOf("int", smser.map { it.id }.toTypedArray()))
             }
