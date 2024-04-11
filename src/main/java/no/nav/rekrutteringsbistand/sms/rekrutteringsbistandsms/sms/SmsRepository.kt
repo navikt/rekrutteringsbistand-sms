@@ -128,6 +128,7 @@ class SmsRepository(
             WHERE $ID = ANY (?)
         """).use { stmt ->
                 stmt.setArray(1, conn.createArrayOf("int", smser.map { it.id }.toTypedArray()))
+                stmt.execute()
             }
         }
     }
