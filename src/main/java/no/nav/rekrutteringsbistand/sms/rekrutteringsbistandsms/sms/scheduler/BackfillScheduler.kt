@@ -52,6 +52,10 @@ class BackfillScheduler(
 
         val smser = smsRepository.hentDirtySmser(1000)
         log.info("BackfillScheduler.backfillDirtySmser: hentet ${smser.size} dirty smser")
+
+        if (smser.isEmpty())
+            return
+
         if (kandidatvarselClient.backfill(smser)) {
             log.info("BackfillScheduler.backfillDirtySmser: back-fillet ${smser.size} dirty smser")
             smsRepository.markClean(smser)
@@ -78,6 +82,9 @@ class BackfillScheduler(
         }
 
         log.info("BackfillScheduler.backfillDirtySmser2: hentet ${smser.size} dirty smser")
+
+        if (smser.isEmpty())
+            return
 
         if (kandidatvarselClient.backfill(smser)) {
             log.info("BackfillScheduler.backfillDirtySmser2: back-fillet ${smser.size} dirty smser")
