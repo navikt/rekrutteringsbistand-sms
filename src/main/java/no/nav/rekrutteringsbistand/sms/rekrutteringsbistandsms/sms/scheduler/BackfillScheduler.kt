@@ -20,9 +20,10 @@ class BackfillScheduler(
         const val HVERT_ANDRE_MINUTT = "0 */2 * * * *"
         const val HVERT_TIENDE_SEKUND = "*/10 * * * * *"
         const val HVERT_ANDRE_SEKUND = "*/2 * * * * *"
+        const val HVERT_SEKUND = "*/1 * * * * *"
     }
 
-    @Scheduled(cron = HVERT_ANDRE_SEKUND)
+    @Scheduled(cron = HVERT_SEKUND)
     fun berikStillingId() {
         if (shutdownInitiated.get()) return
 
