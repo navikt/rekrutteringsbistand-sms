@@ -48,6 +48,7 @@ class KandidatvarselClient(
         val fnr: String,
         val status: String,
         val navIdent: String,
+        val sendt: LocalDateTime?
     )
 
     fun backfill(smser: List<Sms>): Boolean {
@@ -64,6 +65,7 @@ class KandidatvarselClient(
                 fnr = it.fnr,
                 status = it.status.toString(),
                 navIdent = it.navident,
+                sendt = it.sendt
             )
         }
         val request = HttpEntity<List<BackfillRequest>>(backfillSmser, headers)
